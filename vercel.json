@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "api/*.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/api/pdf_to_word",   "dest": "/api/pdf_to_word.py"   },
+    { "src": "/api/pdf_to_excel",  "dest": "/api/pdf_to_excel.py"  },
+    { "src": "/api/pdf_to_ppt",    "dest": "/api/pdf_to_ppt.py"    },
+    { "src": "/api/office_to_pdf", "dest": "/api/office_to_pdf.py" },
+    { "src": "/(.*)",              "dest": "/$1"                   }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin",  "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+      ]
+    }
+  ]
+}

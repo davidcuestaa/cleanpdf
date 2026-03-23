@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF a Excel — Convertir gratis | CleanPDF</title>
+<meta name="description" content="Convierte PDF a Excel (XLSX) gratis. Sin registro, procesado en servidor propio.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cleanpdf.com/pdf-a-excel.html">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+:root {
+  --bg:#f7f8fc; --surface:#ffffff; --border:#e8eaf0;
+  --text:#14161f; --muted:#7c8099;
+  --accent:#4361ee; --accent-h:#3451d1;
+  --green:#1a7a4a; --red:#c0392b;
+  --tool:#217346; --tool-bg:#edf9f2;
+  --radius:14px; --shadow:0 2px 12px rgba(0,0,0,0.06);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; line-height:1.6; min-height:100vh; display:flex; flex-direction:column; }
+.topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 36px; height:52px; display:flex; align-items:center; justify-content:space-between; }
+.logo { font-size:19px; font-weight:800; color:var(--text); text-decoration:none; letter-spacing:-0.03em; display:flex; align-items:center; gap:8px; }
+.logo-mark { width:28px; height:28px; background:var(--accent); border-radius:7px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:800; }
+.logo span { color:var(--accent); }
+.topbar-right { display:flex; align-items:center; gap:14px; }
+.topbar-right a.plain { font-size:13px; color:var(--muted); text-decoration:none; transition:color 0.15s; }
+.topbar-right a.plain:hover { color:var(--text); }
+.kofi-btn { display:flex; align-items:center; gap:6px; background:#ff5e5b; color:#fff; text-decoration:none; padding:6px 14px; border-radius:18px; font-size:13px; font-weight:600; transition:all 0.15s; }
+.kofi-btn:hover { background:#e04e4b; transform:translateY(-1px); }
+.hamburger { display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--text); }
+.navbar { background:var(--surface); border-bottom:2px solid var(--border); padding:0 36px; display:flex; align-items:center; position:sticky; top:0; z-index:100; height:46px; }
+.nav-item { position:relative; height:100%; }
+.nav-btn { height:100%; display:flex; align-items:center; gap:5px; padding:0 14px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:0.04em; background:none; border:none; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:color 0.15s,border-color 0.15s; white-space:nowrap; }
+.nav-btn:hover { color:var(--accent); }
+.nav-item.open > .nav-btn, .nav-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+.nav-btn .chev { font-size:9px; color:var(--muted); transition:transform 0.2s; }
+.nav-item.open > .nav-btn .chev { transform:rotate(180deg); }
+.nav-div { width:1px; height:18px; background:var(--border); margin:0 2px; flex-shrink:0; }
+.nav-search { margin-left:auto; position:relative; display:flex; align-items:center; }
+.nav-search input { padding:5px 12px 5px 32px; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px; color:var(--text); outline:none; width:190px; transition:width 0.3s,border-color 0.2s; }
+.nav-search input:focus { width:240px; border-color:var(--accent); }
+.nav-search input::placeholder { color:var(--muted); }
+.search-ico { position:absolute; left:10px; font-size:12px; color:var(--muted); pointer-events:none; }
+.dd-backdrop { display:none; position:fixed; top:98px; left:0; right:0; bottom:0; background:rgba(0,0,0,0.15); z-index:98; }
+.dd-backdrop.show { display:block; }
+.dropdown { position:fixed; top:98px; left:0; right:0; background:var(--surface); border-bottom:2px solid var(--border); box-shadow:0 12px 40px rgba(0,0,0,0.12); z-index:99; padding:24px 36px 28px; opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-8px); transition:opacity 0.18s,transform 0.18s,visibility 0.18s; }
+.nav-item.open > .dropdown { opacity:1; visibility:visible; pointer-events:all; transform:translateY(0); }
+.dd-card { display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:10px; text-decoration:none; color:var(--text); transition:background 0.13s; }
+.dd-card:hover { background:var(--bg); }
+.dd-card-text .dd-title { font-size:13px; font-weight:700; line-height:1.2; }
+.dd-card-text .dd-sub   { font-size:11px; color:var(--muted); margin-top:1px; }
+.mobile-menu { display:none; position:fixed; inset:0; top:52px; background:var(--surface); z-index:200; overflow-y:auto; padding:12px 16px 32px; }
+.mobile-menu.open { display:block; }
+.mob-group-title { font-size:10px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--muted); padding:12px 8px 4px; }
+.mob-item { display:flex; align-items:center; gap:12px; padding:10px 8px; border-radius:10px; text-decoration:none; color:var(--text); transition:background 0.13s; }
+.mob-item:hover { background:var(--bg); }
+.mob-item span { font-size:14px; font-weight:600; }
+/* PAGE */
+.page-wrap { flex:1; max-width:720px; width:100%; margin:0 auto; padding:40px 24px 64px; }
+.breadcrumb { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); margin-bottom:28px; }
+.breadcrumb a { color:var(--muted); text-decoration:none; }
+.breadcrumb a:hover { color:var(--text); }
+.breadcrumb .sep { font-size:11px; }
+.breadcrumb .current { color:var(--text); font-weight:600; }
+.tool-header { display:flex; align-items:center; gap:20px; margin-bottom:28px; }
+.tool-header-icon { width:64px; height:64px; border-radius:18px; background:var(--tool-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:32px; }
+.tool-header h1 { font-size:28px; font-weight:800; letter-spacing:-0.02em; margin-bottom:4px; }
+.tool-header p { font-size:14px; color:var(--muted); }
+/* TOOL CARD */
+.tool-card { background:var(--surface); border:1.5px solid var(--border); border-radius:18px; box-shadow:var(--shadow); overflow:hidden; }
+.dropzone { padding:48px 32px; text-align:center; cursor:pointer; border:2px dashed var(--border); margin:24px; border-radius:14px; transition:all 0.2s; background:var(--bg); }
+.dropzone:hover, .dropzone.drag-over { border-color:var(--tool); background:var(--tool-bg); }
+.dz-icon { width:56px; height:56px; background:var(--tool-bg); border-radius:15px; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; font-size:28px; border:2px solid var(--tool); }
+.dz-title { font-size:18px; font-weight:700; margin-bottom:6px; }
+.dz-sub { font-size:13px; color:var(--muted); margin-bottom:10px; }
+.dz-sub span { color:var(--tool); font-weight:600; cursor:pointer; }
+.dz-formats { display:inline-flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:4px 14px; font-size:12px; font-weight:700; color:var(--muted); margin-top:4px; }
+.dz-formats strong { color:var(--tool); }
+.file-loaded { display:none; margin:0 24px 0; padding:14px 16px; background:var(--tool-bg); border:1.5px solid var(--tool); border-radius:12px; }
+.file-loaded-inner { display:flex; align-items:center; gap:10px; }
+.file-loaded-icon { font-size:28px; }
+.file-loaded-info { flex:1; min-width:0; }
+.file-loaded-name { font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.file-loaded-size { font-size:11px; color:var(--muted); margin-top:2px; }
+.file-change { background:none; border:1.5px solid var(--border); color:var(--muted); font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; padding:5px 10px; border-radius:8px; cursor:pointer; transition:all 0.15s; flex-shrink:0; }
+.file-change:hover { border-color:var(--text); color:var(--text); }
+input[type=file] { display:none; }
+.action-area { padding:16px 24px 24px; }
+.process-btn { width:100%; background:var(--tool); color:#fff; border:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; padding:15px; border-radius:var(--radius); cursor:pointer; transition:all 0.15s; display:none; letter-spacing:-0.01em; }
+.process-btn:hover:not(:disabled) { opacity:0.9; transform:translateY(-1px); box-shadow:0 4px 20px rgba(0,0,0,0.2); }
+.process-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
+.prog-area { display:none; margin-top:14px; }
+.prog-header { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:7px; }
+.prog-track { background:var(--border); border-radius:99px; height:5px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:99px; width:0%; background:var(--tool); transition:width 0.4s ease; }
+.prog-status { font-size:12px; color:var(--muted); margin-top:6px; text-align:center; }
+.result-area { display:none; margin-top:16px; }
+.result-card { background:#f0faf4; border:1.5px solid #b8e6cc; border-radius:var(--radius); padding:18px 20px; display:flex; align-items:center; gap:12px; }
+.result-card-icon { font-size:28px; flex-shrink:0; }
+.result-card-info { flex:1; min-width:0; }
+.result-card-name { font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.result-card-size { font-size:12px; color:var(--muted); margin-top:2px; }
+.dl-btn { background:var(--green); color:#fff; border:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:700; padding:10px 20px; border-radius:10px; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0; }
+.dl-btn:hover { background:#155d38; }
+.reset-link { display:block; text-align:center; margin-top:12px; font-size:13px; color:var(--accent); cursor:pointer; text-decoration:underline; }
+.error-box { background:#fff5f5; border:1.5px solid #fcc; border-radius:var(--radius); padding:14px 16px; margin-top:14px; font-size:13px; color:var(--red); display:none; }
+/* INFO */
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:40px; }
+.info-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:18px; }
+.info-card h2 { font-size:14px; font-weight:700; margin-bottom:6px; }
+.info-card p { font-size:13px; color:var(--muted); line-height:1.6; }
+.other-tools { margin-top:40px; }
+.other-title { font-size:18px; font-weight:800; letter-spacing:-0.02em; margin-bottom:14px; }
+.other-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+.other-card { display:flex; align-items:center; gap:10px; background:var(--surface); border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; text-decoration:none; color:var(--text); transition:all 0.15s; }
+.other-card:hover { border-color:var(--accent); box-shadow:var(--shadow); transform:translateY(-1px); }
+.other-card span { font-size:13px; font-weight:600; }
+.ad-slot { max-width:720px; margin:0 auto 24px; padding:0 24px; display:flex; justify-content:center; }
+.ad-ph { width:100%; max-width:728px; height:90px; background:var(--surface); border:1px dashed var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:0.05em; }
+footer { background:var(--surface); border-top:1px solid var(--border); padding:22px 36px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.footer-left { font-size:13px; color:var(--muted); }
+.footer-left a { color:var(--muted); text-decoration:none; }
+.footer-links { display:flex; gap:20px; }
+.footer-links a { font-size:13px; color:var(--muted); text-decoration:none; transition:color 0.15s; }
+.footer-links a:hover { color:var(--text); }
+@media (max-width:860px) { .navbar{display:none;} .hamburger{display:flex;} .info-grid{grid-template-columns:1fr;} }
+@media (max-width:480px) { .topbar{padding:0 16px;} .page-wrap{padding:24px 16px 48px;} .tool-header{flex-direction:column;align-items:flex-start;gap:12px;} .tool-header h1{font-size:22px;} footer{padding:16px;flex-direction:column;align-items:flex-start;} }
+</style>
+<style>
+/* ── NEW SINGLE NAVBAR ── */
+.topbar{display:none!important}
+.navbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;height:54px;display:flex!important;align-items:center;gap:0;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 var(--border);}
+.logo{font-size:18px;font-weight:800;color:var(--text);text-decoration:none;letter-spacing:-0.03em;display:flex;align-items:center;margin-right:4px;flex-shrink:0;white-space:nowrap;}
+.logo .logo-mark{width:26px;height:26px;background:var(--accent);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;margin-right:7px;flex-shrink:0;}
+.logo span{color:var(--accent)}
+.nav-items{display:flex;align-items:stretch;height:100%;flex:1;margin-left:0}
+.nav-item{position:relative;height:100%;display:flex;align-items:stretch}
+.nav-btn{height:100%;display:flex;align-items:center;gap:5px;padding:0 13px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.04em;background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.15s,border-color 0.15s;white-space:nowrap;text-decoration:none;}
+.nav-btn:hover,.nav-btn:focus{color:var(--accent);outline:none}
+.nav-item.open>.nav-btn,.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.chev{font-size:9px;color:var(--muted);transition:transform 0.2s;display:inline-block}
+.nav-item.open>.nav-btn .chev{transform:rotate(180deg)}
+.nav-div{display:none}
+.nav-search{display:none}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-contact{font-size:13px;color:var(--muted);text-decoration:none;padding:0 10px;transition:color 0.15s}
+.nav-contact:hover{color:var(--text)}
+.kofi-btn{display:flex;align-items:center;gap:6px;background:#ff5e5b;color:#fff;text-decoration:none;padding:6px 14px;border-radius:18px;font-size:13px;font-weight:600;transition:all 0.15s;flex-shrink:0;}
+.kofi-btn:hover{background:#e04e4b;transform:translateY(-1px)}
+.hamburger{display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text);padding:4px 6px}
+.dd-backdrop{display:none;position:fixed;top:54px;left:0;right:0;bottom:0;background:rgba(0,0,0,0.18);z-index:198;}
+.dd-backdrop.show{display:block}
+.dropdown{position:fixed;top:54px;left:0;right:0;background:var(--surface);border-bottom:2px solid var(--border);box-shadow:0 12px 40px rgba(0,0,0,0.10);z-index:199;padding:28px 40px 32px;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-6px);transition:opacity 0.17s,transform 0.17s,visibility 0.17s;}
+.nav-item.open>.dropdown{opacity:1;visibility:visible;pointer-events:all;transform:translateY(0)}
+.dd-inner{max-width:1160px;margin:0 auto}
+.dd-section-hdr{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:0 0 10px;margin-bottom:4px;border-bottom:1px solid var(--border);grid-column:1/-1;}
+.dd-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;max-width:580px}
+.dd-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.conv-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.conv-group-title{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.conv-rows{display:flex;flex-direction:column;gap:2px}
+.conv-row{display:grid;grid-template-columns:1fr 36px 1fr;align-items:center;gap:4px}
+.conv-arrow{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:16px;}
+.dd-card{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;text-decoration:none;color:var(--text);transition:background 0.12s;}
+.dd-card:hover{background:var(--bg)}
+.dd-card-text .dd-title{font-size:13px;font-weight:700;line-height:1.2}
+.dd-card-text .dd-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.dd-icon{flex-shrink:0;width:36px;height:36px}
+.mobile-menu{display:none;position:fixed;inset:0;top:54px;background:var(--surface);z-index:300;overflow-y:auto;padding:12px 16px 32px;}
+.mobile-menu.open{display:block}
+.mob-group-title{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);padding:12px 8px 4px;}
+.mob-item{display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:10px;text-decoration:none;color:var(--text);transition:background 0.13s;}
+.mob-item:hover{background:var(--bg)}
+.mob-item-label{font-size:14px;font-weight:600}
+.file-thumb canvas{width:100%;height:100%;object-fit:cover;display:block;}
+.other-card-icon{width:28px;height:28px;flex-shrink:0}
+@media(max-width:900px){.nav-items{display:none!important}.hamburger{display:flex!important}}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="logo" href="index.html"><div class="logo-mark"></div>Clean<span>PDF</span></a>
+  <div class="nav-items">
+    <div class="nav-item" id="ni-limpiar">
+      <button class="nav-btn" onclick="toggleDd('limpiar')">LIMPIAR PDF <span class="chev">▾</span></button>
+      <div class="dropdown" id="dd-limpiar"><div class="dd-inner"><div class="dd-grid-2">
+        <a href="limpiar-anuncios.html" class="dd-card"><div class="dd-icon" id="di-clean"></div><div class="dd-card-text"><div class="dd-title">Limpiar anuncios</div><div class="dd-sub">Quita la publicidad de tus apuntes</div></div></a>
+        <a href="marca-de-agua.html" class="dd-card"><div class="dd-icon" id="di-wm"></div><div class="dd-card-text"><div class="dd-title">Quitar marca de agua</div><div class="dd-sub">Elimina watermarks semitransparentes</div></div></a>
+      </div></div></div>
+    </div>
+    <div class="nav-item" id="ni-organizar">
+      <button class="nav-btn" onclick="toggleDd('organizar')">ORGANIZAR PDF <span class="chev">▾</span></button>
+      <div class="dropdown" id="dd-organizar"><div class="dd-inner"><div class="dd-grid-4">
+        <a href="unir-pdf.html" class="dd-card"><div class="dd-icon" id="di-merge"></div><div class="dd-card-text"><div class="dd-title">Unir PDF</div><div class="dd-sub">Combina varios PDFs en uno</div></div></a>
+        <a href="dividir-pdf.html" class="dd-card"><div class="dd-icon" id="di-split"></div><div class="dd-card-text"><div class="dd-title">Dividir PDF</div><div class="dd-sub">Extrae páginas o divide el PDF</div></div></a>
+        <a href="comprimir-pdf.html" class="dd-card"><div class="dd-icon" id="di-compress"></div><div class="dd-card-text"><div class="dd-title">Comprimir PDF</div><div class="dd-sub">Reduce el tamaño del archivo</div></div></a>
+        <a href="rotar-pdf.html" class="dd-card"><div class="dd-icon" id="di-rotate"></div><div class="dd-card-text"><div class="dd-title">Rotar PDF</div><div class="dd-sub">Gira páginas a la orientación correcta</div></div></a>
+      </div></div></div>
+    </div>
+    <div class="nav-item" id="ni-convertir">
+      <button class="nav-btn" onclick="toggleDd('convertir')">CONVERTIR PDF <span class="chev">▾</span></button>
+      <div class="dropdown" id="dd-convertir"><div class="dd-inner"><div class="conv-layout">
+        <div>
+          <div class="conv-group-title">Imágenes</div>
+          <div class="conv-rows"><div class="conv-row">
+            <a href="pdf-a-jpg.html" class="dd-card"><div class="dd-icon" id="di-pdf-jpg-sm"></div><div class="dd-card-text"><div class="dd-title">PDF a JPG</div><div class="dd-sub">Páginas como imágenes</div></div></a>
+            <div class="conv-arrow">⇄</div>
+            <a href="jpg-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-jpg-pdf-sm"></div><div class="dd-card-text"><div class="dd-title">JPG a PDF</div><div class="dd-sub">Imágenes a documento</div></div></a>
+          </div></div>
+        </div>
+        <div>
+          <div class="conv-group-title">Documentos Office</div>
+          <div class="conv-rows">
+            <div class="conv-row">
+              <a href="pdf-a-word.html" class="dd-card"><div class="dd-icon" id="di-pdf-word-sm"></div><div class="dd-card-text"><div class="dd-title">PDF a Word</div><div class="dd-sub">Convierte a DOCX editable</div></div></a>
+              <div class="conv-arrow">⇄</div>
+              <a href="word-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-word-pdf-sm"></div><div class="dd-card-text"><div class="dd-title">Word a PDF</div><div class="dd-sub">DOCX a PDF</div></div></a>
+            </div>
+            <div class="conv-row">
+              <a href="pdf-a-excel.html" class="dd-card"><div class="dd-icon" id="di-pdf-excel-sm"></div><div class="dd-card-text"><div class="dd-title">PDF a Excel</div><div class="dd-sub">Extrae tablas a XLSX</div></div></a>
+              <div class="conv-arrow">⇄</div>
+              <a href="excel-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-excel-pdf-sm"></div><div class="dd-card-text"><div class="dd-title">Excel a PDF</div><div class="dd-sub">XLSX a PDF</div></div></a>
+            </div>
+            <div class="conv-row">
+              <a href="pdf-a-ppt.html" class="dd-card"><div class="dd-icon" id="di-pdf-ppt-sm"></div><div class="dd-card-text"><div class="dd-title">PDF a PowerPoint</div><div class="dd-sub">Convierte a PPTX editable</div></div></a>
+              <div class="conv-arrow">⇄</div>
+              <a href="ppt-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-ppt-pdf-sm"></div><div class="dd-card-text"><div class="dd-title">PowerPoint a PDF</div><div class="dd-sub">PPTX a PDF</div></div></a>
+            </div>
+          </div>
+        </div>
+      </div></div></div>
+    </div>
+    <div class="nav-item" id="ni-todas">
+      <button class="nav-btn" onclick="toggleDd('todas')">TODAS LAS HERRAMIENTAS <span class="chev">▾</span></button>
+      <div class="dropdown" id="dd-todas"><div class="dd-inner">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px">
+          <div class="dd-section-hdr" style="grid-column:1/-1">Limpieza</div>
+          <a href="limpiar-anuncios.html" class="dd-card"><div class="dd-icon" id="di-clean-t"></div><div class="dd-card-text"><div class="dd-title">Limpiar anuncios</div></div></a>
+          <a href="marca-de-agua.html" class="dd-card"><div class="dd-icon" id="di-wm-t"></div><div class="dd-card-text"><div class="dd-title">Quitar marca de agua</div></div></a>
+          <div></div><div></div>
+          <div class="dd-section-hdr" style="grid-column:1/-1">Organizar</div>
+          <a href="unir-pdf.html" class="dd-card"><div class="dd-icon" id="di-merge-t"></div><div class="dd-card-text"><div class="dd-title">Unir PDF</div></div></a>
+          <a href="dividir-pdf.html" class="dd-card"><div class="dd-icon" id="di-split-t"></div><div class="dd-card-text"><div class="dd-title">Dividir PDF</div></div></a>
+          <a href="comprimir-pdf.html" class="dd-card"><div class="dd-icon" id="di-compress-t"></div><div class="dd-card-text"><div class="dd-title">Comprimir PDF</div></div></a>
+          <a href="rotar-pdf.html" class="dd-card"><div class="dd-icon" id="di-rotate-t"></div><div class="dd-card-text"><div class="dd-title">Rotar PDF</div></div></a>
+          <div class="dd-section-hdr" style="grid-column:1/-1">Convertir</div>
+          <a href="pdf-a-jpg.html" class="dd-card"><div class="dd-icon" id="di-pdf-jpg-t"></div><div class="dd-card-text"><div class="dd-title">PDF a JPG</div></div></a>
+          <a href="jpg-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-jpg-pdf-t"></div><div class="dd-card-text"><div class="dd-title">JPG a PDF</div></div></a>
+          <a href="pdf-a-word.html" class="dd-card"><div class="dd-icon" id="di-pdf-word-t"></div><div class="dd-card-text"><div class="dd-title">PDF a Word</div></div></a>
+          <a href="word-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-word-pdf-t"></div><div class="dd-card-text"><div class="dd-title">Word a PDF</div></div></a>
+          <a href="pdf-a-excel.html" class="dd-card"><div class="dd-icon" id="di-pdf-excel-t"></div><div class="dd-card-text"><div class="dd-title">PDF a Excel</div></div></a>
+          <a href="excel-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-excel-pdf-t"></div><div class="dd-card-text"><div class="dd-title">Excel a PDF</div></div></a>
+          <a href="pdf-a-ppt.html" class="dd-card"><div class="dd-icon" id="di-pdf-ppt-t"></div><div class="dd-card-text"><div class="dd-title">PDF a PowerPoint</div></div></a>
+          <a href="ppt-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-ppt-pdf-t"></div><div class="dd-card-text"><div class="dd-title">PowerPoint a PDF</div></div></a>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a href="contact.html" class="nav-contact">Contacto</a>
+    <a href="https://ko-fi.com/TU_USUARIO_KOFI" target="_blank" class="kofi-btn" rel="noopener"> Invítanos a un café</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()"></button>
+  </div>
+</nav>
+<div class="dd-backdrop" id="backdrop" onclick="closeAll()"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mob-group-title">Limpieza</div>
+  <a href="limpiar-anuncios.html" class="mob-item"><div class="dd-icon" id="mob-clean" style="width:32px;height:32px"></div><span class="mob-item-label">Limpiar anuncios</span></a>
+  <a href="marca-de-agua.html" class="mob-item"><div class="dd-icon" id="mob-wm" style="width:32px;height:32px"></div><span class="mob-item-label">Quitar marca de agua</span></a>
+  <div class="mob-group-title">Organizar</div>
+  <a href="unir-pdf.html" class="mob-item"><div class="dd-icon" id="mob-merge" style="width:32px;height:32px"></div><span class="mob-item-label">Unir PDF</span></a>
+  <a href="dividir-pdf.html" class="mob-item"><div class="dd-icon" id="mob-split" style="width:32px;height:32px"></div><span class="mob-item-label">Dividir PDF</span></a>
+  <a href="comprimir-pdf.html" class="mob-item"><div class="dd-icon" id="mob-compress" style="width:32px;height:32px"></div><span class="mob-item-label">Comprimir PDF</span></a>
+  <a href="rotar-pdf.html" class="mob-item"><div class="dd-icon" id="mob-rotate" style="width:32px;height:32px"></div><span class="mob-item-label">Rotar PDF</span></a>
+  <div class="mob-group-title">Convertir</div>
+  <a href="pdf-a-jpg.html" class="mob-item"><div class="dd-icon" id="mob-pdf-jpg" style="width:32px;height:32px"></div><span class="mob-item-label">PDF a JPG</span></a>
+  <a href="jpg-a-pdf.html" class="mob-item"><div class="dd-icon" id="mob-jpg-pdf" style="width:32px;height:32px"></div><span class="mob-item-label">JPG a PDF</span></a>
+  <a href="pdf-a-word.html" class="mob-item"><div class="dd-icon" id="mob-pdf-word" style="width:32px;height:32px"></div><span class="mob-item-label">PDF a Word</span></a>
+  <a href="word-a-pdf.html" class="mob-item"><div class="dd-icon" id="mob-word-pdf" style="width:32px;height:32px"></div><span class="mob-item-label">Word a PDF</span></a>
+  <a href="pdf-a-excel.html" class="mob-item"><div class="dd-icon" id="mob-pdf-excel" style="width:32px;height:32px"></div><span class="mob-item-label">PDF a Excel</span></a>
+  <a href="excel-a-pdf.html" class="mob-item"><div class="dd-icon" id="mob-excel-pdf" style="width:32px;height:32px"></div><span class="mob-item-label">Excel a PDF</span></a>
+  <a href="pdf-a-ppt.html" class="mob-item"><div class="dd-icon" id="mob-pdf-ppt" style="width:32px;height:32px"></div><span class="mob-item-label">PDF a PowerPoint</span></a>
+  <a href="ppt-a-pdf.html" class="mob-item"><div class="dd-icon" id="mob-ppt-pdf" style="width:32px;height:32px"></div><span class="mob-item-label">PowerPoint a PDF</span></a>
+</div>
+<div class="topbar">
+  <a class="logo" href="index.html"><div class="logo-mark"></div>Clean<span>PDF</span></a>
+  <div class="topbar-right">
+    <a href="contact.html" class="plain">Contacto</a>
+    <a href="https://ko-fi.com/TU_USUARIO_KOFI" target="_blank" class="kofi-btn" rel="noopener"> Invítanos a un café</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()"></button>
+  </div>
+</div>
+
+
+
+
+<div class="page-wrap">
+  <nav class="breadcrumb">
+    <a href="index.html">CleanPDF</a><span class="sep">›</span><span class="current">PDF a Excel</span>
+  </nav>
+
+  <div class="tool-header">
+    <div class="tool-header-icon"></div>
+    <div>
+      <h1>PDF a Excel</h1>
+      <p>Convierte PDF a Excel (XLSX) directamente desde el navegador. Gratis, sin registro, procesado en servidor propio.</p>
+    </div>
+  </div>
+
+  <div class="tool-card">
+
+    <div class="dropzone" id="dropzone">
+      <div class="dz-icon"></div>
+      <div class="dz-title">Arrastra tu archivo aquí</div>
+      <div class="dz-sub">o <span onclick="document.getElementById('fileInput').click()">haz clic para seleccionarlo</span></div>
+      <div class="dz-formats">Formato: <strong>.pdf</strong></div>
+      <input type="file" id="fileInput" accept=".pdf">
+    </div>
+
+    <div class="file-loaded" id="fileLoaded">
+      <div class="file-loaded-inner">
+        <div class="file-loaded-icon"></div>
+        <div class="file-loaded-info">
+          <div class="file-loaded-name" id="loadedName">—</div>
+          <div class="file-loaded-size" id="loadedSize">—</div>
+        </div>
+        <button class="file-change" onclick="changeFile()">Cambiar</button>
+      </div>
+    </div>
+
+    <div class="action-area">
+      <button class="process-btn" id="processBtn" onclick="convertFile()">
+        Convertir a Excel (XLSX) →
+      </button>
+      <div class="prog-area" id="progArea">
+        <div class="prog-header">
+          <span id="progLabel">Convirtiendo...</span>
+          <span id="progPct">0%</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+        <div class="prog-status" id="progStatus">Enviando archivo al servidor...</div>
+      </div>
+      <div class="error-box" id="errorBox"></div>
+      <div class="result-area" id="resultArea"></div>
+    </div>
+
+  </div>
+
+  <div style="display:flex;justify-content:center;margin:32px 0;">
+    <div class="ad-ph" style="max-width:728px;width:100%;">Publicidad · Responsive</div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <h2>¿Cómo funciona?</h2>
+      <p>Sube tu archivo PDF, pulsa convertir y el servidor lo procesa con librerías open source. El resultado se descarga directamente a tu dispositivo sin almacenarse en ningún sitio.</p>
+    </div>
+    <div class="info-card">
+      <h2>Privacidad</h2>
+      <p>Los archivos se envían al servidor solo para la conversión y se eliminan inmediatamente después. No se almacenan, no se comparten con terceros.</p>
+    </div>
+    <div class="info-card">
+      <h2>Límites</h2>
+      <p>Tamaño máximo: <strong>4.5 MB</strong> por archivo. Para archivos más grandes, divide el documento primero con la herramienta "Dividir PDF".</p>
+    </div>
+    <div class="info-card">
+      <h2>Calidad</h2>
+      <p>La conversión preserva texto, tablas y estructura básica. Documentos con formatos muy complejos (columnas múltiples, fuentes especiales) pueden necesitar ajustes manuales menores.</p>
+    </div>
+  </div>
+
+  <div class="other-tools">
+    <div class="other-title">Otras herramientas</div>
+    <div class="other-grid">
+      <a href="limpiar-anuncios.html" class="other-card"><span class="other-card-icon"></span><span>Limpiar anuncios</span></a>
+      <a href="unir-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Unir PDF</span></a>
+      <a href="dividir-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Dividir PDF</span></a>
+      <a href="comprimir-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Comprimir PDF</span></a>
+      <a href="pdf-a-jpg.html" class="other-card"><span class="other-card-icon"></span><span>PDF a JPG</span></a>
+      <a href="rotar-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Rotar PDF</span></a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">© 2025 <a href="index.html">CleanPDF</a>. Hecho con  para estudiantes.</div>
+  <div class="footer-links">
+    <a href="privacy-policy.html">Privacidad</a>
+    <a href="terms.html">Términos</a>
+    <a href="contact.html">Contacto</a>
+    <a href="https://ko-fi.com/TU_USUARIO_KOFI" target="_blank" rel="noopener"> Ko-fi</a>
+  </div>
+</footer>
+
+<script>
+// ── File handling ─────────────────────────────────────────────────────────────
+let currentFile = null;
+const dz = document.getElementById('dropzone');
+const fi = document.getElementById('fileInput');
+
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+dz.addEventListener('click', e => { if (e.target.tagName !== 'SPAN') fi.click(); });
+fi.addEventListener('change', () => { if (fi.files[0]) { loadFile(fi.files[0]); fi.value=''; } });
+
+function loadFile(file) {
+  currentFile = file;
+  dz.style.display = 'none';
+  document.getElementById('fileLoaded').style.display = 'block';
+  document.getElementById('loadedName').textContent = file.name;
+  document.getElementById('loadedSize').textContent = (file.size/1024/1024).toFixed(2) + ' MB';
+  document.getElementById('processBtn').style.display = 'block';
+  document.getElementById('resultArea').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('progArea').style.display = 'none';
+}
+
+function changeFile() {
+  currentFile = null;
+  dz.style.display = 'block';
+  document.getElementById('fileLoaded').style.display = 'none';
+  document.getElementById('processBtn').style.display = 'none';
+  document.getElementById('resultArea').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('progArea').style.display = 'none';
+  fi.click();
+}
+
+// ── Conversion ────────────────────────────────────────────────────────────────
+async function convertFile() {
+  if (!currentFile) return;
+
+  const btn = document.getElementById('processBtn');
+  const progArea = document.getElementById('progArea');
+  const progFill = document.getElementById('progFill');
+  const progStatus = document.getElementById('progStatus');
+  const errorBox = document.getElementById('errorBox');
+  const resultArea = document.getElementById('resultArea');
+
+  btn.disabled = true;
+  btn.textContent = 'Convirtiendo...';
+  progArea.style.display = 'block';
+  errorBox.style.display = 'none';
+  resultArea.style.display = 'none';
+
+  // Animate progress bar while waiting
+  progFill.style.transition = 'none';
+  progFill.style.width = '0%';
+  progStatus.textContent = 'Enviando archivo...';
+  document.getElementById('progPct').textContent = '';
+
+  setTimeout(() => {
+    progFill.style.transition = 'width 12s cubic-bezier(0.1,0.4,0.6,0.9)';
+    progFill.style.width = '80%';
+  }, 100);
+
+  try {
+    const formData = new FormData();
+    formData.append('file', currentFile);
+
+    progStatus.textContent = 'Procesando en el servidor...';
+
+    const response = await fetch('/api/pdf_to_excel', {
+      method: 'POST',
+      body: formData,
+    });
+
+    progFill.style.transition = 'width 0.3s';
+    progFill.style.width = '100%';
+    document.getElementById('progPct').textContent = '100%';
+
+    if (!response.ok) {
+      let errMsg = response.statusText;
+      try {
+        const errJson = await response.json();
+        errMsg = errJson.error || errMsg;
+      } catch(e) {}
+      throw new Error(errMsg);
+    }
+
+    const blob = await response.blob();
+    const outName = currentFile.name.replace(/\.[^.]+$/, '') + '.xlsx';
+    const url = URL.createObjectURL(blob);
+
+    progStatus.textContent = ' Conversión completada';
+
+    resultArea.style.display = 'block';
+    resultArea.innerHTML = `
+      <div class="result-card">
+        <div class="result-card-icon"></div>
+        <div class="result-card-info">
+          <div class="result-card-name">${outName}</div>
+          <div class="result-card-size">${(blob.size/1024).toFixed(0)} KB</div>
+        </div>
+        <button class="dl-btn" onclick="triggerDownload('${url}','${outName}')">⬇ Descargar</button>
+      </div>
+      <div class="reset-link" onclick="resetTool()">Convertir otro archivo</div>`;
+
+  } catch(err) {
+    progFill.style.width = '0%';
+    progArea.style.display = 'none';
+    errorBox.style.display = 'block';
+    errorBox.textContent = ' Error: ' + err.message;
+    console.error(err);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Convertir a Excel (XLSX) →';
+}
+
+function resetTool() {
+  currentFile = null;
+  dz.style.display = 'block';
+  document.getElementById('fileLoaded').style.display = 'none';
+  document.getElementById('processBtn').style.display = 'none';
+  document.getElementById('progArea').style.display = 'none';
+  document.getElementById('resultArea').style.display = 'none';
+  document.getElementById('errorBox').style.display = 'none';
+  document.getElementById('progFill').style.width = '0%';
+}
+
+function triggerDownload(url, name) {
+  const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+
+function searchGo(e) { if(e.key==='Enter'&&e.target.value.trim()) window.location.href='index.html?q='+encodeURIComponent(e.target.value.trim()); }
+</script>
+<script>
+// SVG Icons
+function fileBadge(l,c,s=36){const r=Math.round(s*.22),f=s<28?Math.round(s*.3):Math.round(s*.27);return`<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="${s}" height="${s}" rx="${r}" fill="${c}"/><text x="${s/2}" y="${s/2+f*.38}" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="${f}" font-weight="800" fill="#fff">${l}</text></svg>`}
+function dual(l1,c1,l2,c2,s=44){const d=Math.round(s*.62),r=Math.round(d*.25),f=Math.round(d*.28),o=s-d,aR=Math.round(s*.175),ax=Math.round(s*.5),ay=Math.round(s*.5);return`<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="${o}" y="${o}" width="${d}" height="${d}" rx="${r}" fill="${c2}"/><text x="${o+d/2}" y="${o+d/2+f*.38}" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="${f}" font-weight="800" fill="#fff">${l2}</text><rect x="0" y="0" width="${d}" height="${d}" rx="${r}" fill="${c1}" stroke="#fff" stroke-width="2"/><text x="${d/2}" y="${d/2+f*.38}" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="${f}" font-weight="800" fill="#fff">${l1}</text><circle cx="${ax}" cy="${ay}" r="${aR}" fill="white"/><text x="${ax}" y="${ay+aR*.4}" text-anchor="middle" font-family="sans-serif" font-size="${Math.round(aR*1.1)}" fill="#999">→</text></svg>`}
+function act(type,color,s=44){const icons={clean:`<svg width="${s}" height="${s}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="11" fill="${color}"/><rect x="10" y="13" width="24" height="3" rx="1.5" fill="white"/><rect x="10" y="20" width="16" height="3" rx="1.5" fill="white" opacity="0.5"/><rect x="10" y="27" width="20" height="3" rx="1.5" fill="white" opacity="0.5"/><circle cx="34" cy="33" r="6" fill="#e63946" stroke="white" stroke-width="2"/><line x1="31.5" y1="30.5" x2="36.5" y2="35.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/><line x1="36.5" y1="30.5" x2="31.5" y2="35.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>`,watermark:`<svg width="${s}" height="${s}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="11" fill="${color}"/><text x="22" y="26" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="12" font-weight="800" fill="white" opacity="0.35" transform="rotate(-20,22,22)">WM</text><line x1="10" y1="10" x2="34" y2="34" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>`,merge:`<svg width="${s}" height="${s}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="11" fill="${color}"/><rect x="8" y="11" width="11" height="14" rx="2" fill="white" opacity="0.7"/><rect x="25" y="11" width="11" height="14" rx="2" fill="white" opacity="0.7"/><path d="M20 22 L24 22 M22 20 L24 22 L22 24" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,split:`<svg width="${s}" height="${s}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="11" fill="${color}"/><rect x="14" y="10" width="16" height="20" rx="2" fill="white" opacity="0.8"/><line x1="9" y1="22" x2="35" y2="22" stroke="white" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6"/><path d="M19 35 L22 38 L25 35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="22" y1="32" x2="22" y2="38" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`,compress:`<svg width="${s}" height="${s}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="11" fill="${color}"/><rect x="12" y="9" width="20" height="26" rx="2" fill="white" opacity="0.8"/><path d="M18 23 L22 27 L26 23" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="22" y1="17" x2="22" y2="27" stroke="${color}" stroke-width="2" stroke-linecap="round"/></svg>`,rotate:`<svg width="${s}" height="${s}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="44" height="44" rx="11" fill="${color}"/><path d="M30 14 A11 11 0 1 0 33 22" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/><path d="M33 14 L30 14 L30 11" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`};
+const svg=icons[type]||fileBadge('?','#999',s);
+if(s!==44)return svg.replace(/width="44"/g,`width="${s}"`).replace(/height="44"/g,`height="${s}"`);
+return svg;}
+const C={pdf:'#e63946',word:'#2b579a',excel:'#217346',ppt:'#c43e1c',jpg:'#d97706',clean:'#4361ee',wm:'#7b2d8b'};
+const ICONS={
+'di-clean':()=>act('clean',C.clean,36),'di-wm':()=>act('watermark',C.wm,36),
+'di-merge':()=>act('merge',C.pdf,36),'di-split':()=>act('split',C.pdf,36),
+'di-compress':()=>act('compress',C.pdf,36),'di-rotate':()=>act('rotate',C.pdf,36),
+'di-pdf-jpg-sm':()=>dual('PDF',C.pdf,'JPG',C.jpg,36),'di-jpg-pdf-sm':()=>dual('JPG',C.jpg,'PDF',C.pdf,36),
+'di-pdf-word-sm':()=>dual('PDF',C.pdf,'W',C.word,36),'di-word-pdf-sm':()=>dual('W',C.word,'PDF',C.pdf,36),
+'di-pdf-excel-sm':()=>dual('PDF',C.pdf,'X',C.excel,36),'di-excel-pdf-sm':()=>dual('X',C.excel,'PDF',C.pdf,36),
+'di-pdf-ppt-sm':()=>dual('PDF',C.pdf,'P',C.ppt,36),'di-ppt-pdf-sm':()=>dual('P',C.ppt,'PDF',C.pdf,36),
+'di-clean-t':()=>act('clean',C.clean,36),'di-wm-t':()=>act('watermark',C.wm,36),
+'di-merge-t':()=>act('merge',C.pdf,36),'di-split-t':()=>act('split',C.pdf,36),
+'di-compress-t':()=>act('compress',C.pdf,36),'di-rotate-t':()=>act('rotate',C.pdf,36),
+'di-pdf-jpg-t':()=>dual('PDF',C.pdf,'JPG',C.jpg,36),'di-jpg-pdf-t':()=>dual('JPG',C.jpg,'PDF',C.pdf,36),
+'di-pdf-word-t':()=>dual('PDF',C.pdf,'W',C.word,36),'di-word-pdf-t':()=>dual('W',C.word,'PDF',C.pdf,36),
+'di-pdf-excel-t':()=>dual('PDF',C.pdf,'X',C.excel,36),'di-excel-pdf-t':()=>dual('X',C.excel,'PDF',C.pdf,36),
+'di-pdf-ppt-t':()=>dual('PDF',C.pdf,'P',C.ppt,36),'di-ppt-pdf-t':()=>dual('P',C.ppt,'PDF',C.pdf,36),
+'mob-clean':()=>act('clean',C.clean,32),'mob-wm':()=>act('watermark',C.wm,32),
+'mob-merge':()=>act('merge',C.pdf,32),'mob-split':()=>act('split',C.pdf,32),
+'mob-compress':()=>act('compress','#217346',32),'mob-rotate':()=>act('rotate','#2ec4b6',32),
+'mob-pdf-jpg':()=>dual('PDF',C.pdf,'JPG',C.jpg,32),'mob-jpg-pdf':()=>dual('JPG',C.jpg,'PDF',C.pdf,32),
+'mob-pdf-word':()=>dual('PDF',C.pdf,'W',C.word,32),'mob-word-pdf':()=>dual('W',C.word,'PDF',C.pdf,32),
+'mob-pdf-excel':()=>dual('PDF',C.pdf,'X',C.excel,32),'mob-excel-pdf':()=>dual('X',C.excel,'PDF',C.pdf,32),
+'mob-pdf-ppt':()=>dual('PDF',C.pdf,'P',C.ppt,32),'mob-ppt-pdf':()=>dual('P',C.ppt,'PDF',C.pdf,32),
+};
+Object.entries(ICONS).forEach(([id,fn])=>{const el=document.getElementById(id);if(el)el.innerHTML=fn();});
+// Replace .other-card-icon emojis
+document.querySelectorAll('.other-card').forEach(card=>{
+  const ico=card.querySelector('.other-card-icon');if(!ico)return;
+  const h=card.getAttribute('href')||'';let svg='';
+  if(h.includes('limpiar'))svg=act('clean',C.clean,28);
+  else if(h.includes('marca'))svg=act('watermark',C.wm,28);
+  else if(h.includes('unir'))svg=act('merge',C.pdf,28);
+  else if(h.includes('dividir'))svg=act('split',C.pdf,28);
+  else if(h.includes('comprimir'))svg=act('compress','#217346',28);
+  else if(h.includes('rotar'))svg=act('rotate','#2ec4b6',28);
+  else if(h.includes('pdf-a-jpg'))svg=dual('PDF',C.pdf,'JPG',C.jpg,28);
+  else if(h.includes('jpg-a-pdf'))svg=dual('JPG',C.jpg,'PDF',C.pdf,28);
+  else if(h.includes('pdf-a-word'))svg=dual('PDF',C.pdf,'W',C.word,28);
+  else if(h.includes('word-a-pdf'))svg=dual('W',C.word,'PDF',C.pdf,28);
+  else if(h.includes('pdf-a-excel'))svg=dual('PDF',C.pdf,'X',C.excel,28);
+  else if(h.includes('excel-a-pdf'))svg=dual('X',C.excel,'PDF',C.pdf,28);
+  else if(h.includes('pdf-a-ppt'))svg=dual('PDF',C.pdf,'P',C.ppt,28);
+  else if(h.includes('ppt-a-pdf'))svg=dual('P',C.ppt,'PDF',C.pdf,28);
+  if(svg){ico.innerHTML=svg;ico.style.fontSize='0';}
+});
+// Replace tool-header-icon emoji
+const thi=document.querySelector('.tool-header-icon');
+if(thi){const p=window.location.pathname;let svg='';
+  if(p.includes('limpiar'))svg=act('clean',C.clean,36);
+  else if(p.includes('marca'))svg=act('watermark',C.wm,36);
+  else if(p.includes('unir'))svg=act('merge',C.pdf,36);
+  else if(p.includes('dividir'))svg=act('split',C.pdf,36);
+  else if(p.includes('comprimir'))svg=act('compress','#217346',36);
+  else if(p.includes('rotar'))svg=act('rotate','#2ec4b6',36);
+  else if(p.includes('pdf-a-jpg'))svg=dual('PDF',C.pdf,'JPG',C.jpg,36);
+  else if(p.includes('jpg-a-pdf'))svg=dual('JPG',C.jpg,'PDF',C.pdf,36);
+  else if(p.includes('pdf-a-word'))svg=dual('PDF',C.pdf,'W',C.word,36);
+  else if(p.includes('word-a-pdf'))svg=dual('W',C.word,'PDF',C.pdf,36);
+  else if(p.includes('pdf-a-excel'))svg=dual('PDF',C.pdf,'X',C.excel,36);
+  else if(p.includes('excel-a-pdf'))svg=dual('X',C.excel,'PDF',C.pdf,36);
+  else if(p.includes('pdf-a-ppt'))svg=dual('PDF',C.pdf,'P',C.ppt,36);
+  else if(p.includes('ppt-a-pdf'))svg=dual('P',C.ppt,'PDF',C.pdf,36);
+  if(svg){thi.innerHTML=svg;thi.style.fontSize='0';}
+  const dzi=document.querySelector('.dz-icon');
+  if(dzi&&svg){dzi.innerHTML=svg;dzi.style.fontSize='0';}
+}
+// Dropdown logic
+const ddIds=['limpiar','organizar','convertir','todas'];
+function toggleDd(id){const isOpen=document.getElementById('ni-'+id).classList.contains('open');closeAll();if(!isOpen){document.getElementById('ni-'+id).classList.add('open');document.getElementById('backdrop').classList.add('show');}}
+function closeAll(){ddIds.forEach(id=>{const el=document.getElementById('ni-'+id);if(el)el.classList.remove('open');});const b=document.getElementById('backdrop');if(b)b.classList.remove('show');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
+function toggleMobile(){const m=document.getElementById('mobileMenu'),h=document.getElementById('hamburger');const open=m.classList.toggle('open');h.textContent=open?'':'';}
+</script>
+</body>
+</html>

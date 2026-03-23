@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CleanPDF — Herramientas PDF gratuitas para estudiantes</title>
+<meta name="description" content="Todas las herramientas PDF que necesitas: limpia anuncios de apuntes, quita marcas de agua, une, divide, comprime, convierte y rota PDFs. Gratis, sin registro.">
+<meta name="keywords" content="herramientas pdf gratis, limpiar apuntes pdf, quitar anuncios plataformas de apuntes, unir pdf, dividir pdf, comprimir pdf, pdf a jpg, rotar pdf">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://cleanpdf.com/">
+<meta property="og:title" content="CleanPDF — Herramientas PDF gratuitas para estudiantes">
+<meta property="og:description" content="Limpia anuncios, une, divide, comprime y convierte tus PDFs. Todo gratis y en tu navegador.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"CleanPDF","url":"https://cleanpdf.com","description":"Herramientas PDF gratuitas para estudiantes."}
+</script>
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #f7f8fc;
+  --surface: #ffffff;
+  --border:  #e8eaf0;
+  --text:    #14161f;
+  --muted:   #7c8099;
+  --accent:  #4361ee;
+  --radius:  14px;
+  --shadow:  0 2px 12px rgba(0,0,0,0.06);
+  --shadow-h:0 8px 32px rgba(0,0,0,0.12);
+  --pdf:     #e63946;
+  --word:    #2b579a;
+  --excel:   #217346;
+  --ppt:     #c43e1c;
+  --jpg:     #e8a030;
+  --clean:   #4361ee;
+  --wm:      #7b2d8b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+/* ═══════════════════════════════════
+   SINGLE NAVBAR (like iLovePDF)
+═══════════════════════════════════ */
+.navbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;
+  height:54px;
+  display:flex;align-items:center;gap:0;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 1px 0 var(--border);
+}
+.logo{
+  font-size:18px;font-weight:800;color:var(--text);
+  text-decoration:none;letter-spacing:-0.03em;
+  display:flex;align-items:center;
+  margin-right:4px;flex-shrink:0;white-space:nowrap;
+}
+.logo .logo-mark{
+  width:26px;height:26px;background:var(--accent);
+  border-radius:6px;display:inline-flex;align-items:center;
+  justify-content:center;color:#fff;font-size:13px;font-weight:800;
+  margin-right:7px;flex-shrink:0;
+}
+.logo span{color:var(--accent)}
+
+.nav-items{display:flex;align-items:stretch;height:100%;flex:1;margin-left:0}
+
+.nav-item{position:relative;height:100%;display:flex;align-items:stretch}
+.nav-btn{
+  height:100%;display:flex;align-items:center;gap:5px;
+  padding:0 13px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:700;color:var(--text);
+  text-transform:uppercase;letter-spacing:0.04em;
+  background:none;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color 0.15s,border-color 0.15s;
+  white-space:nowrap;text-decoration:none;
+}
+.nav-btn:hover,.nav-btn:focus{color:var(--accent);outline:none}
+.nav-item.open>.nav-btn{color:var(--accent);border-bottom-color:var(--accent)}
+.chev{font-size:9px;color:var(--muted);transition:transform 0.2s;display:inline-block}
+.nav-item.open>.nav-btn .chev{transform:rotate(180deg)}
+
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-contact{font-size:13px;color:var(--muted);text-decoration:none;padding:0 10px;transition:color 0.15s}
+.nav-contact:hover{color:var(--text)}
+.kofi-btn{
+  display:flex;align-items:center;gap:6px;
+  background:#ff5e5b;color:#fff;text-decoration:none;
+  padding:6px 14px;border-radius:18px;font-size:13px;font-weight:600;
+  transition:all 0.15s;flex-shrink:0;
+}
+.kofi-btn:hover{background:#e04e4b;transform:translateY(-1px)}
+.kofi-ico{font-size:14px}
+.hamburger{display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text);padding:4px 6px}
+
+/* ── DROPDOWNS ── */
+.dd-backdrop{
+  display:none;position:fixed;
+  top:54px;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.18);z-index:198;
+}
+.dd-backdrop.show{display:block}
+
+.dropdown{
+  position:fixed;top:54px;left:0;right:0;
+  background:var(--surface);
+  border-bottom:2px solid var(--border);
+  box-shadow:0 12px 40px rgba(0,0,0,0.10);
+  z-index:199;padding:28px 40px 32px;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateY(-6px);
+  transition:opacity 0.17s,transform 0.17s,visibility 0.17s;
+}
+.nav-item.open>.dropdown{
+  opacity:1;visibility:visible;pointer-events:all;transform:translateY(0)
+}
+.dd-inner{max-width:1160px;margin:0 auto}
+
+/* ── Section header inside dropdown ── */
+.dd-section-hdr{
+  font-size:10px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--muted);
+  padding:0 0 10px;margin-bottom:4px;
+  border-bottom:1px solid var(--border);
+  grid-column:1/-1;
+}
+.dd-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;max-width:580px}
+.dd-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+
+/* Conversion layout: two side-by-side groups */
+.conv-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.conv-group-title{
+  font-size:10px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--muted);
+  margin-bottom:8px;padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.conv-rows{display:flex;flex-direction:column;gap:2px}
+.conv-row{display:grid;grid-template-columns:1fr 36px 1fr;align-items:center;gap:4px}
+.conv-arrow{
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:16px;
+}
+
+.dd-card{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 11px;border-radius:9px;
+  text-decoration:none;color:var(--text);
+  transition:background 0.12s;
+}
+.dd-card:hover{background:var(--bg)}
+.dd-card-text .dd-title{font-size:13px;font-weight:700;line-height:1.2}
+.dd-card-text .dd-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.dd-icon{flex-shrink:0;width:36px;height:36px}
+
+/* ═══════════════════════════════════
+   HERO
+═══════════════════════════════════ */
+.hero{
+  text-align:center;padding:52px 24px 36px;
+  max-width:640px;margin:0 auto;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#eef1fd;color:var(--accent);
+  font-size:11px;font-weight:700;letter-spacing:0.05em;
+  text-transform:uppercase;padding:4px 13px;border-radius:20px;margin-bottom:16px;
+}
+.hero h1{
+  font-size:clamp(26px,4.5vw,46px);font-weight:800;
+  line-height:1.1;letter-spacing:-0.03em;margin-bottom:12px;
+}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero p{color:var(--muted);font-size:15px;max-width:420px;margin:0 auto 22px}
+.hero-stats{display:flex;justify-content:center;gap:28px;flex-wrap:wrap}
+.hstat-n{font-size:22px;font-weight:800}
+.hstat-l{font-size:11px;color:var(--muted);margin-top:1px}
+
+/* ═══════════════════════════════════
+   AD SLOT
+═══════════════════════════════════ */
+.ad-slot{max-width:760px;margin:0 auto 28px;padding:0 24px;display:flex;justify-content:center}
+.ad-ph{
+  width:100%;max-width:728px;height:90px;background:var(--surface);
+  border:1px dashed var(--border);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.05em;
+}
+
+/* ═══════════════════════════════════
+   TOOL GRID
+═══════════════════════════════════ */
+.grid-section{max-width:1120px;margin:0 auto;padding:0 24px 64px}
+.sec-label{
+  font-size:11px;font-weight:700;letter-spacing:0.09em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:14px;padding-left:2px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.tools-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:12px;margin-bottom:32px;
+}
+.tool-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:20px 18px;
+  text-decoration:none;color:var(--text);
+  transition:all 0.18s;display:block;position:relative;overflow:hidden;
+}
+.tool-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-h);border-color:transparent}
+.tool-card::after{
+  content:'';position:absolute;inset:0;border-radius:var(--radius);
+  opacity:0;transition:opacity 0.18s;
+}
+.tool-card:hover::after{opacity:1}
+.tool-card.c-red::after   {background:linear-gradient(140deg,#fff5f5,#fff)}
+.tool-card.c-blue::after  {background:linear-gradient(140deg,#f0f4ff,#fff)}
+.tool-card.c-green::after {background:linear-gradient(140deg,#f0faf4,#fff)}
+.tool-card.c-orange::after{background:linear-gradient(140deg,#fff8f0,#fff)}
+.tool-card.c-purple::after{background:linear-gradient(140deg,#f8f0ff,#fff)}
+.tool-card.c-teal::after  {background:linear-gradient(140deg,#f0fafe,#fff)}
+.tool-card.c-yellow::after{background:linear-gradient(140deg,#fffdf0,#fff)}
+.tc-icon{margin-bottom:14px;position:relative;z-index:1}
+.tool-card h3{font-size:15px;font-weight:700;margin-bottom:5px;position:relative;z-index:1}
+.tool-card p {font-size:12px;color:var(--muted);line-height:1.5;position:relative;z-index:1}
+.badge-hot{position:absolute;top:12px;right:12px;background:#ff5e5b;color:#fff;font-size:9px;font-weight:700;letter-spacing:0.04em;padding:2px 7px;border-radius:10px;text-transform:uppercase;z-index:2}
+
+/* ═══════════════════════════════════
+   WHY
+═══════════════════════════════════ */
+.why{max-width:1120px;margin:0 auto;padding:0 24px 64px}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.why-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 18px}
+.why-icon{margin-bottom:10px}
+.why-card h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.why-card p {font-size:12px;color:var(--muted);line-height:1.55}
+
+/* ═══════════════════════════════════
+   FOOTER
+═══════════════════════════════════ */
+footer{
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:22px 36px;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.footer-left{font-size:13px;color:var(--muted)}
+.footer-left a{color:var(--muted);text-decoration:none}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.15s}
+.footer-links a:hover{color:var(--text)}
+
+/* ═══════════════════════════════════
+   MOBILE MENU
+═══════════════════════════════════ */
+.mobile-menu{
+  display:none;position:fixed;inset:0;top:54px;
+  background:var(--surface);z-index:300;overflow-y:auto;padding:12px 16px 32px;
+}
+.mobile-menu.open{display:block}
+.mob-group-title{
+  font-size:10px;font-weight:700;letter-spacing:0.09em;
+  text-transform:uppercase;color:var(--muted);padding:12px 8px 4px;
+}
+.mob-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 8px;border-radius:10px;
+  text-decoration:none;color:var(--text);transition:background 0.13s;
+}
+.mob-item:hover{background:var(--bg)}
+.mob-item-label{font-size:14px;font-weight:600}
+
+/* ═══════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════ */
+@media(max-width:900px){
+  .nav-items{display:none}
+  .hamburger{display:flex}
+  .nav-contact{display:none}
+  .tools-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  .navbar{padding:0 16px}
+  .tools-grid{gap:8px}
+  .tool-card{padding:14px 12px}
+  .tool-card h3{font-size:13px}
+  footer{padding:16px;flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     NAVBAR
+═══════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+
+  <a class="logo" href="index.html"><div class="logo-mark">✦</div>Clean<span>PDF</span></a>
+
+  <div class="nav-items">
+
+    <div class="nav-item" id="ni-limpiar">
+      <button class="nav-btn" onclick="toggleDd('limpiar')">LIMPIAR PDF <span class="chev">▾</span></button>
+      <div class="dropdown" id="dd-limpiar">
+        <div class="dd-inner">
+          <div class="dd-grid-2">
+            <a href="limpiar-anuncios.html" class="dd-card">
+              <div class="dd-icon" id="di-clean"></div>
+              <div class="dd-card-text"><div class="dd-title">Limpiar anuncios</div><div class="dd-sub">Quita la publicidad de tus apuntes</div></div>
+            </a>
+            <a href="marca-de-agua.html" class="dd-card">
+              <div class="dd-icon" id="di-wm"></div>
+              <div class="dd-card-text"><div class="dd-title">Quitar marca de agua</div><div class="dd-sub">Elimina watermarks semitransparentes</div></div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="ni-organizar">
+      <button class="nav-btn" onclick="toggleDd('organizar')">ORGANIZAR PDF <span class="chev">▾</span></button>
+      <div class="dropdown" id="dd-organizar">
+        <div class="dd-inner">
+          <div class="dd-grid-4">
+            <a href="unir-pdf.html" class="dd-card">
+              <div class="dd-icon" id="di-merge"></div>
+              <div class="dd-card-text"><div class="dd-title">Unir PDF</div><div class="dd-sub">Combina varios PDFs en uno</div></div>
+            </a>
+            <a href="dividir-pdf.html" class="dd-card">
+              <div class="dd-icon" id="di-split"></div>
+              <div class="dd-card-text"><div class="dd-title">Dividir PDF</div><div class="dd-sub">Extrae páginas o divide el PDF</div></div>
+            </a>
+            <a href="comprimir-pdf.html" class="dd-card">
+              <div class="dd-icon" id="di-compress"></div>
+              <div class="dd-card-text"><div class="dd-title">Comprimir PDF</div><div class="dd-sub">Reduce el tamaño del archivo</div></div>
+            </a>
+            <a href="rotar-pdf.html" class="dd-card">
+              <div class="dd-icon" id="di-rotate"></div>
+              <div class="dd-card-text"><div class="dd-title">Rotar PDF</div><div class="dd-sub">Gira páginas a la orientación correcta</div></div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="ni-convertir">
+      <button class="nav-btn" onclick="toggleDd('convertir')">CONVERTIR PDF <span class="chev">▾</span></button>
+      <div class="dropdown" id="dd-convertir">
+        <div class="dd-inner">
+          <div class="conv-layout">
+            <!-- Left group: image conversions -->
+            <div>
+              <div class="conv-group-title">Imágenes</div>
+              <div class="conv-rows">
+                <div class="conv-row">
+                  <a href="pdf-a-jpg.html" class="dd-card">
+                    <div class="dd-icon" id="di-pdf-jpg-sm"></div>
+                    <div class="dd-card-text"><div class="dd-title">PDF a JPG</div><div class="dd-sub">Páginas como imágenes</div></div>
+                  </a>
+                  <div class="conv-arrow">⇄</div>
+                  <a href="jpg-a-pdf.html" class="dd-card">
+                    <div class="dd-icon" id="di-jpg-pdf-sm"></div>
+                    <div class="dd-card-text"><div class="dd-title">JPG a PDF</div><div class="dd-sub">Imágenes a documento</div></div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!-- Right group: office conversions -->
+            <div>
+              <div class="conv-group-title">Documentos Office</div>
+              <div class="conv-rows">
+                <div class="conv-row">
+                  <a href="pdf-a-word.html" class="dd-card">
+                    <div class="dd-icon" id="di-pdf-word-sm"></div>
+                    <div class="dd-card-text"><div class="dd-title">PDF a Word</div><div class="dd-sub">Convierte a DOCX editable</div></div>
+                  </a>
+                  <div class="conv-arrow">⇄</div>
+                  <a href="word-a-pdf.html" class="dd-card">
+                    <div class="dd-icon" id="di-word-pdf-sm"></div>
+                    <div class="dd-card-text"><div class="dd-title">Word a PDF</div><div class="dd-sub">DOCX a PDF</div></div>
+                  </a>
+                </div>
+                <div class="conv-row">
+                  <a href="pdf-a-excel.html" class="dd-card">
+                    <div class="dd-icon" id="di-pdf-excel-sm"></div>
+                    <div class="dd-card-text"><div class="dd-title">PDF a Excel</div><div class="dd-sub">Extrae tablas a XLSX</div></div>
+                  </a>
+                  <div class="conv-arrow">⇄</div>
+                  <a href="excel-a-pdf.html" class="dd-card">
+                    <div class="dd-icon" id="di-excel-pdf-sm"></div>
+                    <div class="dd-card-text"><div class="dd-title">Excel a PDF</div><div class="dd-sub">XLSX a PDF</div></div>
+                  </a>
+                </div>
+                <div class="conv-row">
+                  <a href="pdf-a-ppt.html" class="dd-card">
+                    <div class="dd-icon" id="di-pdf-ppt-sm"></div>
+                    <div class="dd-card-text"><div class="dd-title">PDF a PowerPoint</div><div class="dd-sub">Convierte a PPTX editable</div></div>
+                  </a>
+                  <div class="conv-arrow">⇄</div>
+                  <a href="ppt-a-pdf.html" class="dd-card">
+                    <div class="dd-icon" id="di-ppt-pdf-sm"></div>
+                    <div class="dd-card-text"><div class="dd-title">PowerPoint a PDF</div><div class="dd-sub">PPTX a PDF</div></div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="ni-todas">
+      <button class="nav-btn" onclick="toggleDd('todas')">TODAS LAS HERRAMIENTAS <span class="chev">▾</span></button>
+      <div class="dropdown" id="dd-todas">
+        <div class="dd-inner">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px">
+            <div class="dd-section-hdr" style="grid-column:1/-1">Limpieza</div>
+            <a href="limpiar-anuncios.html" class="dd-card"><div class="dd-icon" id="di-clean-t"></div><div class="dd-card-text"><div class="dd-title">Limpiar anuncios</div></div></a>
+            <a href="marca-de-agua.html"    class="dd-card"><div class="dd-icon" id="di-wm-t"></div><div class="dd-card-text"><div class="dd-title">Quitar marca de agua</div></div></a>
+            <div></div><div></div>
+            <div class="dd-section-hdr" style="grid-column:1/-1">Organizar</div>
+            <a href="unir-pdf.html"      class="dd-card"><div class="dd-icon" id="di-merge-t"></div><div class="dd-card-text"><div class="dd-title">Unir PDF</div></div></a>
+            <a href="dividir-pdf.html"   class="dd-card"><div class="dd-icon" id="di-split-t"></div><div class="dd-card-text"><div class="dd-title">Dividir PDF</div></div></a>
+            <a href="comprimir-pdf.html" class="dd-card"><div class="dd-icon" id="di-compress-t"></div><div class="dd-card-text"><div class="dd-title">Comprimir PDF</div></div></a>
+            <a href="rotar-pdf.html"     class="dd-card"><div class="dd-icon" id="di-rotate-t"></div><div class="dd-card-text"><div class="dd-title">Rotar PDF</div></div></a>
+            <div class="dd-section-hdr" style="grid-column:1/-1">Convertir</div>
+            <a href="pdf-a-jpg.html"   class="dd-card"><div class="dd-icon" id="di-pdf-jpg-t"></div><div class="dd-card-text"><div class="dd-title">PDF a JPG</div></div></a>
+            <a href="jpg-a-pdf.html"   class="dd-card"><div class="dd-icon" id="di-jpg-pdf-t"></div><div class="dd-card-text"><div class="dd-title">JPG a PDF</div></div></a>
+            <a href="pdf-a-word.html"  class="dd-card"><div class="dd-icon" id="di-pdf-word-t"></div><div class="dd-card-text"><div class="dd-title">PDF a Word</div></div></a>
+            <a href="word-a-pdf.html"  class="dd-card"><div class="dd-icon" id="di-word-pdf-t"></div><div class="dd-card-text"><div class="dd-title">Word a PDF</div></div></a>
+            <a href="pdf-a-excel.html" class="dd-card"><div class="dd-icon" id="di-pdf-excel-t"></div><div class="dd-card-text"><div class="dd-title">PDF a Excel</div></div></a>
+            <a href="excel-a-pdf.html" class="dd-card"><div class="dd-icon" id="di-excel-pdf-t"></div><div class="dd-card-text"><div class="dd-title">Excel a PDF</div></div></a>
+            <a href="pdf-a-ppt.html"   class="dd-card"><div class="dd-icon" id="di-pdf-ppt-t"></div><div class="dd-card-text"><div class="dd-title">PDF a PowerPoint</div></div></a>
+            <a href="ppt-a-pdf.html"   class="dd-card"><div class="dd-icon" id="di-ppt-pdf-t"></div><div class="dd-card-text"><div class="dd-title">PowerPoint a PDF</div></div></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /nav-items -->
+
+  <div class="nav-right">
+    <a href="contact.html" class="nav-contact">Contacto</a>
+    <a href="https://ko-fi.com/TU_USUARIO_KOFI" target="_blank" class="kofi-btn" rel="noopener">
+      <span class="kofi-ico">☕</span> Invítanos a un café
+    </a>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()">☰</button>
+  </div>
+
+</nav>
+
+<!-- Backdrop -->
+<div class="dd-backdrop" id="backdrop" onclick="closeAll()"></div>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mob-group-title">Limpieza</div>
+  <a href="limpiar-anuncios.html" class="mob-item"><div class="dd-icon" id="mob-clean" style="width:32px;height:32px"></div><span class="mob-item-label">Limpiar anuncios</span></a>
+  <a href="marca-de-agua.html"    class="mob-item"><div class="dd-icon" id="mob-wm"    style="width:32px;height:32px"></div><span class="mob-item-label">Quitar marca de agua</span></a>
+  <div class="mob-group-title">Organizar</div>
+  <a href="unir-pdf.html"      class="mob-item"><div class="dd-icon" id="mob-merge"    style="width:32px;height:32px"></div><span class="mob-item-label">Unir PDF</span></a>
+  <a href="dividir-pdf.html"   class="mob-item"><div class="dd-icon" id="mob-split"    style="width:32px;height:32px"></div><span class="mob-item-label">Dividir PDF</span></a>
+  <a href="comprimir-pdf.html" class="mob-item"><div class="dd-icon" id="mob-compress" style="width:32px;height:32px"></div><span class="mob-item-label">Comprimir PDF</span></a>
+  <a href="rotar-pdf.html"     class="mob-item"><div class="dd-icon" id="mob-rotate"   style="width:32px;height:32px"></div><span class="mob-item-label">Rotar PDF</span></a>
+  <div class="mob-group-title">Convertir</div>
+  <a href="pdf-a-jpg.html"   class="mob-item"><div class="dd-icon" id="mob-pdf-jpg"   style="width:32px;height:32px"></div><span class="mob-item-label">PDF a JPG</span></a>
+  <a href="jpg-a-pdf.html"   class="mob-item"><div class="dd-icon" id="mob-jpg-pdf"   style="width:32px;height:32px"></div><span class="mob-item-label">JPG a PDF</span></a>
+  <a href="pdf-a-word.html"  class="mob-item"><div class="dd-icon" id="mob-pdf-word"  style="width:32px;height:32px"></div><span class="mob-item-label">PDF a Word</span></a>
+  <a href="word-a-pdf.html"  class="mob-item"><div class="dd-icon" id="mob-word-pdf"  style="width:32px;height:32px"></div><span class="mob-item-label">Word a PDF</span></a>
+  <a href="pdf-a-excel.html" class="mob-item"><div class="dd-icon" id="mob-pdf-excel" style="width:32px;height:32px"></div><span class="mob-item-label">PDF a Excel</span></a>
+  <a href="excel-a-pdf.html" class="mob-item"><div class="dd-icon" id="mob-excel-pdf" style="width:32px;height:32px"></div><span class="mob-item-label">Excel a PDF</span></a>
+  <a href="pdf-a-ppt.html"   class="mob-item"><div class="dd-icon" id="mob-pdf-ppt"   style="width:32px;height:32px"></div><span class="mob-item-label">PDF a PowerPoint</span></a>
+  <a href="ppt-a-pdf.html"   class="mob-item"><div class="dd-icon" id="mob-ppt-pdf"   style="width:32px;height:32px"></div><span class="mob-item-label">PowerPoint a PDF</span></a>
+</div>
+
+<!-- ═══════════════════════════════════
+     HERO
+═══════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-tag">Hecho para estudiantes</div>
+  <h1>Las herramientas PDF<br>que necesitas, <em>gratis</em></h1>
+  <p>Sin registro. Sin límites. Todo en tu navegador — tus archivos no salen de tu dispositivo.</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">14</div><div class="hstat-l">herramientas</div></div>
+    <div class="hstat"><div class="hstat-n">100%</div><div class="hstat-l">gratuito</div></div>
+    <div class="hstat"><div class="hstat-n">0</div><div class="hstat-l">registros</div></div>
+    <div class="hstat"><div class="hstat-n">∞</div><div class="hstat-l">archivos</div></div>
+  </div>
+</header>
+
+<!-- AD -->
+<div class="ad-slot"><div class="ad-ph">Publicidad · 728×90</div></div>
+
+<!-- ═══════════════════════════════════
+     TOOL GRID
+═══════════════════════════════════ -->
+<div class="grid-section" id="toolGrid">
+
+  <div class="sec-label">Limpieza de apuntes</div>
+  <div class="tools-grid">
+    <a href="limpiar-anuncios.html" class="tool-card c-red" data-tags="limpiar anuncios publicidad plataformas de apuntes apuntes quitar borrar">
+      <span class="badge-hot">Popular</span>
+      <div class="tc-icon" id="gi-clean"></div>
+      <h3>Limpiar anuncios</h3>
+      <p>Elimina la publicidad de tus apuntes PDF de plataformas de apuntes y otras plataformas.</p>
+    </a>
+    <a href="marca-de-agua.html" class="tool-card c-purple" data-tags="marca agua watermark quitar eliminar borrar">
+      <div class="tc-icon" id="gi-wm"></div>
+      <h3>Quitar marca de agua</h3>
+      <p>Elimina marcas de agua semitransparentes, textos de fondo y logos superpuestos.</p>
+    </a>
+  </div>
+
+  <div class="sec-label">Organizar PDFs</div>
+  <div class="tools-grid">
+    <a href="unir-pdf.html"      class="tool-card c-blue"  data-tags="unir juntar combinar merge pdf varios">
+      <div class="tc-icon" id="gi-merge"></div><h3>Unir PDF</h3>
+      <p>Combina varios PDFs en uno solo y ordénalos como quieras.</p>
+    </a>
+    <a href="dividir-pdf.html"   class="tool-card c-blue"  data-tags="dividir separar split extraer páginas pdf">
+      <div class="tc-icon" id="gi-split"></div><h3>Dividir PDF</h3>
+      <p>Extrae páginas concretas o divide el PDF en archivos independientes.</p>
+    </a>
+    <a href="comprimir-pdf.html" class="tool-card c-green" data-tags="comprimir reducir tamaño peso pdf compress">
+      <div class="tc-icon" id="gi-compress"></div><h3>Comprimir PDF</h3>
+      <p>Reduce el peso de tus PDFs manteniendo la máxima calidad posible.</p>
+    </a>
+    <a href="rotar-pdf.html"     class="tool-card c-teal"  data-tags="rotar girar rotate pdf páginas orientación">
+      <div class="tc-icon" id="gi-rotate"></div><h3>Rotar PDF</h3>
+      <p>Rota páginas individuales o todo el documento a la orientación correcta.</p>
+    </a>
+  </div>
+
+  <div class="sec-label">Convertir</div>
+  <div class="tools-grid">
+    <a href="pdf-a-jpg.html"   class="tool-card c-yellow" data-tags="pdf jpg imagen convertir extraer png foto">
+      <div class="tc-icon" id="gi-pdf-jpg"></div><h3>PDF a JPG</h3>
+      <p>Convierte cada página de tu PDF en una imagen JPG de alta calidad.</p>
+    </a>
+    <a href="jpg-a-pdf.html"   class="tool-card c-yellow" data-tags="jpg imagen foto pdf convertir png">
+      <div class="tc-icon" id="gi-jpg-pdf"></div><h3>JPG a PDF</h3>
+      <p>Convierte imágenes en un PDF. Ajusta orden y orientación.</p>
+    </a>
+    <a href="pdf-a-word.html"  class="tool-card c-blue"   data-tags="pdf word docx convertir editar documento">
+      <div class="tc-icon" id="gi-pdf-word"></div><h3>PDF a Word</h3>
+      <p>Convierte tus PDFs a documentos Word editables.</p>
+    </a>
+    <a href="word-a-pdf.html"  class="tool-card c-blue"   data-tags="word docx pdf convertir">
+      <div class="tc-icon" id="gi-word-pdf"></div><h3>Word a PDF</h3>
+      <p>Convierte documentos Word a PDF con formato íntegro.</p>
+    </a>
+    <a href="pdf-a-excel.html" class="tool-card c-green"  data-tags="pdf excel xlsx convertir tabla datos">
+      <div class="tc-icon" id="gi-pdf-excel"></div><h3>PDF a Excel</h3>
+      <p>Extrae tablas de tus PDFs a hojas de cálculo Excel editables.</p>
+    </a>
+    <a href="excel-a-pdf.html" class="tool-card c-green"  data-tags="excel xlsx pdf convertir">
+      <div class="tc-icon" id="gi-excel-pdf"></div><h3>Excel a PDF</h3>
+      <p>Convierte hojas de cálculo Excel a PDF con columnas ajustadas.</p>
+    </a>
+    <a href="pdf-a-ppt.html"   class="tool-card c-orange" data-tags="pdf powerpoint pptx convertir presentación slides">
+      <div class="tc-icon" id="gi-pdf-ppt"></div><h3>PDF a PowerPoint</h3>
+      <p>Transforma tus PDFs en presentaciones PowerPoint editables.</p>
+    </a>
+    <a href="ppt-a-pdf.html"   class="tool-card c-orange" data-tags="powerpoint pptx pdf convertir presentación">
+      <div class="tc-icon" id="gi-ppt-pdf"></div><h3>PowerPoint a PDF</h3>
+      <p>Convierte presentaciones PPTX a PDF con fidelidad visual total.</p>
+    </a>
+  </div>
+
+</div>
+
+<!-- AD -->
+<div class="ad-slot" style="margin-bottom:48px"><div class="ad-ph">Publicidad · Responsive</div></div>
+
+<!-- WHY -->
+<section class="why">
+  <div class="sec-label">Por qué CleanPDF</div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon" id="wi-lock"></div>
+      <h4>100% privado</h4>
+      <p>Tus archivos se procesan en tu navegador. Nunca se envían a servidores.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon" id="wi-bolt"></div>
+      <h4>Instantáneo</h4>
+      <p>Sin colas ni esperas. El procesamiento ocurre directamente en tu dispositivo.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon" id="wi-student"></div>
+      <h4>Para estudiantes</h4>
+      <p>Diseñado para universitarios. Limpia apuntes de plataformas conocidas de apuntes, organiza PDFs de clase y más.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon" id="wi-inf"></div>
+      <h4>Sin límites</h4>
+      <p>Sin límite de archivos ni páginas. Sin registro. Gratis ahora y siempre.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">© 2025 <a href="index.html">CleanPDF</a>. Hecho con ☕ para estudiantes.</div>
+  <div class="footer-links">
+    <a href="privacy-policy.html">Privacidad</a>
+    <a href="terms.html">Términos</a>
+    <a href="contact.html">Contacto</a>
+    <a href="https://ko-fi.com/TU_USUARIO_KOFI" target="_blank" rel="noopener">Ko-fi</a>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// SVG ICON SYSTEM
+// All icons built from SVG — no emojis, consistent style
+// ═══════════════════════════════════════════════════════
+
+// File-type badge: rounded rectangle with label
+function fileBadge(label, color, size=36) {
+  const r = Math.round(size * 0.22);
+  const fs = size < 28 ? Math.round(size * 0.3) : Math.round(size * 0.27);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="${size}" height="${size}" rx="${r}" fill="${color}"/>
+    <text x="${size/2}" y="${size/2 + fs*0.38}" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="${fs}" font-weight="800" fill="#fff">${label}</text>
+  </svg>`;
+}
+
+// Dual conversion icon: two overlapping badges + arrow
+function dualBadge(l1, c1, l2, c2, size=44) {
+  const s = Math.round(size * 0.62);
+  const r = Math.round(s * 0.25);
+  const fs = Math.round(s * 0.28);
+  const off = size - s; // bottom-right offset
+  const arrowR = Math.round(size * 0.175);
+  const arrowCx = Math.round(size * 0.5);
+  const arrowCy = Math.round(size * 0.5);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- back badge -->
+    <rect x="${off}" y="${off}" width="${s}" height="${s}" rx="${r}" fill="${c2}"/>
+    <text x="${off + s/2}" y="${off + s/2 + fs*0.38}" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="${fs}" font-weight="800" fill="#fff">${l2}</text>
+    <!-- front badge -->
+    <rect x="0" y="0" width="${s}" height="${s}" rx="${r}" fill="${c1}" stroke="#fff" stroke-width="2"/>
+    <text x="${s/2}" y="${s/2 + fs*0.38}" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="${fs}" font-weight="800" fill="#fff">${l1}</text>
+    <!-- arrow circle -->
+    <circle cx="${arrowCx}" cy="${arrowCy}" r="${arrowR}" fill="white"/>
+    <text x="${arrowCx}" y="${arrowCy + arrowR*0.4}" text-anchor="middle" font-family="sans-serif" font-size="${Math.round(arrowR*1.1)}" fill="#999">→</text>
+  </svg>`;
+}
+
+// Utility/action icons (SVG path icons, same style)
+function actionIcon(type, color, size=44) {
+  const icons = {
+    clean: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="11" fill="${color}"/>
+      <rect x="10" y="13" width="24" height="3" rx="1.5" fill="white"/>
+      <rect x="10" y="20" width="16" height="3" rx="1.5" fill="white" opacity="0.5"/>
+      <rect x="10" y="27" width="20" height="3" rx="1.5" fill="white" opacity="0.5"/>
+      <circle cx="34" cy="33" r="6" fill="#e63946" stroke="white" stroke-width="2"/>
+      <line x1="31.5" y1="30.5" x2="36.5" y2="35.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="36.5" y1="30.5" x2="31.5" y2="35.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`,
+    watermark: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="11" fill="${color}"/>
+      <text x="22" y="26" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="12" font-weight="800" fill="white" opacity="0.35" transform="rotate(-20,22,22)">WM</text>
+      <line x1="10" y1="10" x2="34" y2="34" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="8" y1="12" x2="32" y2="36" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+    </svg>`,
+    merge: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="11" fill="${color}"/>
+      <rect x="8" y="11" width="11" height="14" rx="2" fill="white" opacity="0.7"/>
+      <rect x="8" y="29" width="11" height="4" rx="1" fill="white" opacity="0.4"/>
+      <rect x="25" y="11" width="11" height="14" rx="2" fill="white" opacity="0.7"/>
+      <rect x="25" y="29" width="11" height="4" rx="1" fill="white" opacity="0.4"/>
+      <path d="M20 22 L24 22 M22 20 L24 22 L22 24" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    split: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="11" fill="${color}"/>
+      <rect x="14" y="10" width="16" height="20" rx="2" fill="white" opacity="0.8"/>
+      <line x1="22" y1="32" x2="22" y2="38" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      <path d="M19 35 L22 38 L25 35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="9" y1="22" x2="35" y2="22" stroke="white" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6"/>
+    </svg>`,
+    compress: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="11" fill="${color}"/>
+      <rect x="12" y="9" width="20" height="26" rx="2" fill="white" opacity="0.8"/>
+      <path d="M18 23 L22 27 L26 23" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M22 17 L22 27" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
+    </svg>`,
+    rotate: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="11" fill="${color}"/>
+      <path d="M30 14 A11 11 0 1 0 33 22" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <path d="M33 14 L30 14 L30 11" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+    lock: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="20" width="24" height="17" rx="3" fill="#4361ee"/>
+      <path d="M15 20V15a7 7 0 0 1 14 0v5" stroke="#4361ee" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <circle cx="22" cy="29" r="3" fill="white"/>
+    </svg>`,
+    bolt: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="24,8 14,24 22,24 20,36 30,20 22,20" fill="#f4a261"/>
+    </svg>`,
+    student: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22 10 L38 18 L22 26 L6 18 Z" fill="#4361ee"/>
+      <path d="M10 20 L10 30 C10 30 14 36 22 36 C30 36 34 30 34 30 L34 20" stroke="#4361ee" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <line x1="38" y1="18" x2="38" y2="28" stroke="#4361ee" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>`,
+    infinity: `<svg width="${size}" height="${size}" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 22 C8 16 13 13 18 13 C23 13 22 22 22 22 C22 22 21 31 26 31 C31 31 36 28 36 22 C36 16 31 13 26 13 C21 13 22 22 22 22 C22 22 23 31 18 31 C13 31 8 28 8 22 Z" stroke="#4361ee" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>`,
+  };
+  return icons[type] || fileBadge('?', '#999', size);
+}
+
+// Color palette
+const C = {
+  pdf:'#e63946', word:'#2b579a', excel:'#217346',
+  ppt:'#c43e1c', jpg:'#d97706', clean:'#4361ee', wm:'#7b2d8b'
+};
+
+// ── Icon definitions: id → SVG function ──
+const ICONS = {
+  // Dropdown nav icons (36px)
+  'di-clean':      () => actionIcon('clean',   C.clean, 36),
+  'di-wm':         () => actionIcon('watermark',C.wm,   36),
+  'di-merge':      () => actionIcon('merge',   C.pdf,   36),
+  'di-split':      () => actionIcon('split',   C.pdf,   36),
+  'di-compress':   () => actionIcon('compress',C.pdf,   36),
+  'di-rotate':     () => actionIcon('rotate',  C.pdf,   36),
+  'di-pdf-jpg-sm': () => dualBadge('PDF',C.pdf,'JPG',C.jpg, 36),
+  'di-jpg-pdf-sm': () => dualBadge('JPG',C.jpg,'PDF',C.pdf, 36),
+  'di-pdf-word-sm':() => dualBadge('PDF',C.pdf,'W',C.word, 36),
+  'di-word-pdf-sm':() => dualBadge('W',C.word,'PDF',C.pdf, 36),
+  'di-pdf-excel-sm':()=> dualBadge('PDF',C.pdf,'X',C.excel, 36),
+  'di-excel-pdf-sm':()=> dualBadge('X',C.excel,'PDF',C.pdf, 36),
+  'di-pdf-ppt-sm': () => dualBadge('PDF',C.pdf,'P',C.ppt, 36),
+  'di-ppt-pdf-sm': () => dualBadge('P',C.ppt,'PDF',C.pdf, 36),
+  // Todas las herramientas (same, 36px)
+  'di-clean-t':      () => actionIcon('clean',    C.clean, 36),
+  'di-wm-t':         () => actionIcon('watermark', C.wm,   36),
+  'di-merge-t':      () => actionIcon('merge',    C.pdf,   36),
+  'di-split-t':      () => actionIcon('split',    C.pdf,   36),
+  'di-compress-t':   () => actionIcon('compress', C.pdf,   36),
+  'di-rotate-t':     () => actionIcon('rotate',   C.pdf,   36),
+  'di-pdf-jpg-t':    () => dualBadge('PDF',C.pdf,'JPG',C.jpg,   36),
+  'di-jpg-pdf-t':    () => dualBadge('JPG',C.jpg,'PDF',C.pdf,   36),
+  'di-pdf-word-t':   () => dualBadge('PDF',C.pdf,'W',C.word,    36),
+  'di-word-pdf-t':   () => dualBadge('W',C.word,'PDF',C.pdf,    36),
+  'di-pdf-excel-t':  () => dualBadge('PDF',C.pdf,'X',C.excel,   36),
+  'di-excel-pdf-t':  () => dualBadge('X',C.excel,'PDF',C.pdf,   36),
+  'di-pdf-ppt-t':    () => dualBadge('PDF',C.pdf,'P',C.ppt,     36),
+  'di-ppt-pdf-t':    () => dualBadge('P',C.ppt,'PDF',C.pdf,     36),
+  // Grid card icons (44px)
+  'gi-clean':   () => actionIcon('clean',    C.clean, 44),
+  'gi-wm':      () => actionIcon('watermark',C.wm,    44),
+  'gi-merge':   () => actionIcon('merge',    C.pdf,   44),
+  'gi-split':   () => actionIcon('split',    C.pdf,   44),
+  'gi-compress':() => actionIcon('compress', '#217346',44),
+  'gi-rotate':  () => actionIcon('rotate',   '#2ec4b6',44),
+  'gi-pdf-jpg': () => dualBadge('PDF',C.pdf,'JPG',C.jpg, 44),
+  'gi-jpg-pdf': () => dualBadge('JPG',C.jpg,'PDF',C.pdf, 44),
+  'gi-pdf-word':() => dualBadge('PDF',C.pdf,'W',C.word,  44),
+  'gi-word-pdf':() => dualBadge('W',C.word,'PDF',C.pdf,  44),
+  'gi-pdf-excel':()=> dualBadge('PDF',C.pdf,'X',C.excel, 44),
+  'gi-excel-pdf':()=> dualBadge('X',C.excel,'PDF',C.pdf, 44),
+  'gi-pdf-ppt': () => dualBadge('PDF',C.pdf,'P',C.ppt,   44),
+  'gi-ppt-pdf': () => dualBadge('P',C.ppt,'PDF',C.pdf,   44),
+  // Why section
+  'wi-lock':    () => actionIcon('lock',     '', 40),
+  'wi-bolt':    () => actionIcon('bolt',     '', 40),
+  'wi-student': () => actionIcon('student',  '', 40),
+  'wi-inf':     () => actionIcon('infinity', '', 40),
+  // Mobile menu (32px)
+  'mob-clean':    () => actionIcon('clean',    C.clean, 32),
+  'mob-wm':       () => actionIcon('watermark',C.wm,    32),
+  'mob-merge':    () => actionIcon('merge',    C.pdf,   32),
+  'mob-split':    () => actionIcon('split',    C.pdf,   32),
+  'mob-compress': () => actionIcon('compress','#217346',32),
+  'mob-rotate':   () => actionIcon('rotate',  '#2ec4b6',32),
+  'mob-pdf-jpg':  () => dualBadge('PDF',C.pdf,'JPG',C.jpg,  32),
+  'mob-jpg-pdf':  () => dualBadge('JPG',C.jpg,'PDF',C.pdf,  32),
+  'mob-pdf-word': () => dualBadge('PDF',C.pdf,'W',C.word,   32),
+  'mob-word-pdf': () => dualBadge('W',C.word,'PDF',C.pdf,   32),
+  'mob-pdf-excel':() => dualBadge('PDF',C.pdf,'X',C.excel,  32),
+  'mob-excel-pdf':() => dualBadge('X',C.excel,'PDF',C.pdf,  32),
+  'mob-pdf-ppt':  () => dualBadge('PDF',C.pdf,'P',C.ppt,    32),
+  'mob-ppt-pdf':  () => dualBadge('P',C.ppt,'PDF',C.pdf,    32),
+};
+
+// Render all icons
+Object.entries(ICONS).forEach(([id, fn]) => {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = fn();
+});
+
+// ═══════════════════════════════════
+// DROPDOWN LOGIC
+// ═══════════════════════════════════
+const ddIds = ['limpiar','organizar','convertir','todas'];
+
+function toggleDd(id) {
+  const isOpen = document.getElementById('ni-'+id).classList.contains('open');
+  closeAll();
+  if (!isOpen) {
+    document.getElementById('ni-'+id).classList.add('open');
+    document.getElementById('backdrop').classList.add('show');
+  }
+}
+function closeAll() {
+  ddIds.forEach(id => document.getElementById('ni-'+id).classList.remove('open'));
+  document.getElementById('backdrop').classList.remove('show');
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeAll(); });
+
+// ═══════════════════════════════════
+// MOBILE MENU
+// ═══════════════════════════════════
+function toggleMobile() {
+  const m = document.getElementById('mobileMenu');
+  const h = document.getElementById('hamburger');
+  const open = m.classList.toggle('open');
+  h.textContent = open ? '✕' : '☰';
+}
+</script>
+</body>
+</html>
