@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF a Word — Convertir gratis | CleanPDF</title>
-<meta name="description" content="Convierte PDF a Word (DOCX) gratis. Sin registro, procesado en servidor propio.">
+<meta name="description" content="Convierte PDF a Word (DOCX) editable gratis. Sin registro, procesado en servidor propio.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://cleanpdf.com/pdf-a-word.html">
 <style>
@@ -306,7 +306,7 @@ footer { background:var(--surface); border-top:1px solid var(--border); padding:
     <div class="tool-header-icon"></div>
     <div>
       <h1>PDF a Word</h1>
-      <p>Convierte PDF a Word (DOCX) directamente desde el navegador. Gratis, sin registro, procesado en servidor propio.</p>
+      <p>Convierte PDF a documento Word (DOCX) editable. Gratis, sin registro, procesado en servidor propio.</p>
     </div>
   </div>
 
@@ -333,7 +333,7 @@ footer { background:var(--surface); border-top:1px solid var(--border); padding:
 
     <div class="action-area">
       <button class="process-btn" id="processBtn" onclick="convertFile()">
-        Convertir a Word (DOCX) →
+        Convertir a Word →
       </button>
       <div class="prog-area" id="progArea">
         <div class="prog-header">
@@ -356,7 +356,7 @@ footer { background:var(--surface); border-top:1px solid var(--border); padding:
   <div class="info-grid">
     <div class="info-card">
       <h2>¿Cómo funciona?</h2>
-      <p>Sube tu archivo PDF, pulsa convertir y el servidor lo procesa con librerías open source. El resultado se descarga directamente a tu dispositivo sin almacenarse en ningún sitio.</p>
+      <p>Sube tu PDF, pulsa convertir y el servidor reconstruye el documento Word preservando texto, tablas y layout. El resultado se descarga directamente a tu dispositivo.</p>
     </div>
     <div class="info-card">
       <h2>Privacidad</h2>
@@ -364,22 +364,22 @@ footer { background:var(--surface); border-top:1px solid var(--border); padding:
     </div>
     <div class="info-card">
       <h2>Límites</h2>
-      <p>Tamaño máximo: <strong>4.5 MB</strong> por archivo. Para archivos más grandes, divide el documento primero con la herramienta "Dividir PDF".</p>
+      <p>Tamaño máximo: <strong>4.5 MB</strong> por archivo.</p>
     </div>
     <div class="info-card">
       <h2>Calidad</h2>
-      <p>La conversión preserva texto, tablas y estructura básica. Documentos con formatos muy complejos (columnas múltiples, fuentes especiales) pueden necesitar ajustes manuales menores.</p>
+      <p>La conversión preserva texto, tablas y layout. PDFs escaneados (imágenes sin texto) no producen contenido editable.</p>
     </div>
   </div>
 
   <div class="other-tools">
     <div class="other-title">Otras herramientas</div>
     <div class="other-grid">
-      <a href="limpiar-anuncios.html" class="other-card"><span class="other-card-icon"></span><span>Limpiar anuncios</span></a>
+      <a href="word-a-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Word a PDF</span></a>
+      <a href="pdf-a-excel.html" class="other-card"><span class="other-card-icon"></span><span>PDF a Excel</span></a>
+      <a href="pdf-a-ppt.html" class="other-card"><span class="other-card-icon"></span><span>PDF a PowerPoint</span></a>
       <a href="unir-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Unir PDF</span></a>
-      <a href="dividir-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Dividir PDF</span></a>
       <a href="comprimir-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Comprimir PDF</span></a>
-      <a href="pdf-a-jpg.html" class="other-card"><span class="other-card-icon"></span><span>PDF a JPG</span></a>
       <a href="rotar-pdf.html" class="other-card"><span class="other-card-icon"></span><span>Rotar PDF</span></a>
     </div>
   </div>
@@ -512,7 +512,7 @@ async function convertFile() {
   }
 
   btn.disabled = false;
-  btn.textContent = 'Convertir a Word (DOCX) →';
+  btn.textContent = 'Convertir a Word →';
 }
 
 function resetTool() {
