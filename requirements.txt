@@ -1,0 +1,23 @@
+# CleanPDF — requirements.txt para Vercel
+# Todas las librerías son Python puro (sin binarios del sistema)
+
+# Office → PDF
+python-docx==1.1.2
+openpyxl==3.1.5
+python-pptx==1.0.2
+reportlab==4.2.5
+
+# PDF → Word (reconstruye layout, tablas, imágenes)
+pdf2docx==0.5.8
+
+# PDF → Excel  (extracción de tablas)
+pdfplumber==0.11.4
+
+# PDF → PPT  (extracción con coordenadas)
+# pdfplumber ya instalado arriba
+
+# Fallback texto para todos los convertidores
+pdfminer.six==20231228
+
+# Imágenes (requerido por pdf2docx internamente)
+Pillow==10.4.0
