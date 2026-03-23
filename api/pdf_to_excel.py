@@ -2,22 +2,20 @@
 API endpoint: POST /api/pdf_to_excel
 Extrae tablas de PDF a XLSX.
 
-Entorno: Vercel serverless.
-Librería: pdfplumber (100% Python, funciona en Vercel)
-          camelot-py NO funciona en Vercel (necesita OpenCV + Ghostscript)
+Entorno: Vercel serverless (100% Python, sin binarios del sistema).
 
-Estrategia de extracción en 2 pasadas:
-  1. lines_strict  — tablas con líneas explícitas (más preciso)
-  2. text-based    — tablas separadas por espacios (facturas, listados)
+Comportamiento:
+- TODAS las tablas de TODAS las páginas van a UNA SOLA hoja "Datos"
+- Entre tablas: 1 fila vacía + fila de título "Página X – Tabla Y"
+- Si no hay tablas con bordes, usa extracción por espacios (facturas, listados)
+- Styling: cabecera azul, filas alternas, columnas auto-ajustadas, freeze row 1
 
-Styling XLSX: cabecera azul, filas alternas, columnas auto-ajustadas,
-primera fila congelada, bordes.
+Instalar: pip install pdfplumber openpyxl pdfminer.six
 """
 import io
 import os
 import cgi
 import json
-import traceback
 from http.server import BaseHTTPRequestHandler
 
 try:
@@ -34,8 +32,7 @@ except ImportError:
 
 try:
     import openpyxl
-    from openpyxl.styles import (Font, PatternFill, Alignment,
-                                  Border, Side, GradientFill)
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
     from openpyxl.utils import get_column_letter
     OPENPYXL_OK = True
 except ImportError:
@@ -56,207 +53,249 @@ def _parse_multipart(handler):
     return f.file.read(), f.filename, None
 
 
-# ── Estilos XLSX ──────────────────────────────────────────────────────────────
+# ── Estilos ───────────────────────────────────────────────────────────────────
 
-HEADER_FILL = PatternFill("solid", fgColor="4361EE")
-ALT_FILL    = PatternFill("solid", fgColor="F4F5FB")
-HEADER_FONT = Font(bold=True, color="FFFFFF", name="Calibri", size=10)
-BODY_FONT   = Font(name="Calibri", size=10)
-CENTER_AL   = Alignment(horizontal="center", vertical="center", wrap_text=True)
-LEFT_AL     = Alignment(horizontal="left",   vertical="center", wrap_text=True)
-THIN        = Side(style="thin", color="D0D4E8")
-BORDER      = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
+HEADER_FILL   = PatternFill("solid", fgColor="4361EE")
+ALT_FILL      = PatternFill("solid", fgColor="EEF0FB")
+SECTION_FILL  = PatternFill("solid", fgColor="E8EAF6")  # gris-azulado para títulos de sección
+HEADER_FONT   = Font(bold=True, color="FFFFFF", name="Calibri", size=10)
+SECTION_FONT  = Font(bold=True, color="1A237E", name="Calibri", size=9, italic=True)
+BODY_FONT     = Font(name="Calibri", size=10)
+CENTER_AL     = Alignment(horizontal="center", vertical="center", wrap_text=True)
+LEFT_AL       = Alignment(horizontal="left",   vertical="center", wrap_text=True)
+THIN          = Side(style="thin", color="C5CAE9")
+BORDER        = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 
 
-def _style_ws(ws, data):
-    """Aplica estilo profesional a una hoja."""
-    if not data:
-        return
-    for r_idx, row in enumerate(data, 1):
-        is_hdr = r_idx == 1
-        is_alt = r_idx % 2 == 0
-        for c_idx, val in enumerate(row, 1):
-            cell = ws.cell(row=r_idx, column=c_idx, value=val)
-            cell.border    = BORDER
-            cell.alignment = CENTER_AL if is_hdr else LEFT_AL
-            if is_hdr:
-                cell.fill = HEADER_FILL
-                cell.font = HEADER_FONT
-            elif is_alt:
-                cell.fill = ALT_FILL
-                cell.font = BODY_FONT
-            else:
-                cell.font = BODY_FONT
+def _style_header_row(ws, row_idx, n_cols):
+    """Aplica estilo de cabecera (azul) a una fila."""
+    for c in range(1, n_cols + 1):
+        cell = ws.cell(row=row_idx, column=c)
+        cell.fill   = HEADER_FILL
+        cell.font   = HEADER_FONT
+        cell.border = BORDER
+        cell.alignment = CENTER_AL
 
-    # Auto-ancho de columnas
+
+def _style_body_row(ws, row_idx, n_cols, alt=False):
+    """Aplica estilo de cuerpo a una fila."""
+    for c in range(1, n_cols + 1):
+        cell = ws.cell(row=row_idx, column=c)
+        if alt:
+            cell.fill = ALT_FILL
+        cell.font   = BODY_FONT
+        cell.border = BORDER
+        cell.alignment = LEFT_AL
+
+
+def _style_section_row(ws, row_idx, n_cols, label):
+    """Fila de título de sección entre tablas."""
+    cell = ws.cell(row=row_idx, column=1, value=label)
+    cell.fill      = SECTION_FILL
+    cell.font      = SECTION_FONT
+    cell.alignment = LEFT_AL
+    # Merge across all columns
+    if n_cols > 1:
+        ws.merge_cells(
+            start_row=row_idx, start_column=1,
+            end_row=row_idx, end_column=n_cols
+        )
+
+
+def _auto_width(ws):
+    """Ajusta ancho de columnas al contenido."""
     for col in ws.columns:
         letter  = get_column_letter(col[0].column)
-        max_len = max(
-            (len(str(c.value).split("\n")[0]) for c in col if c.value),
-            default=0
-        )
-        ws.column_dimensions[letter].width = min(max(max_len + 2, 8), 60)
-
-    ws.freeze_panes = "A2"
-    ws.auto_filter.ref = ws.dimensions
-
-
-def _safe_name(name, used):
-    name = str(name)[:28]
-    for ch in r'\/*?[]':
-        name = name.replace(ch, "_")
-    base = name
-    i = 1
-    while name in used:
-        name = f"{base}_{i}"
-        i += 1
-    used.add(name)
-    return name
+        max_len = 0
+        for cell in col:
+            try:
+                if cell.value:
+                    val = str(cell.value).split("\n")[0]
+                    max_len = max(max_len, len(val))
+            except Exception:
+                pass
+        ws.column_dimensions[letter].width = min(max(max_len + 2, 6), 55)
 
 
-# ── Extracción con pdfplumber ─────────────────────────────────────────────────
+# ── Extracción de tablas ──────────────────────────────────────────────────────
 
-# Configuraciones de extracción (se prueban en orden)
-TABLE_SETTINGS = [
-    # 1. Líneas estrictas — mejor para tablas con bordes
-    {
-        "vertical_strategy":   "lines_strict",
-        "horizontal_strategy": "lines_strict",
-        "snap_tolerance": 4,
-        "join_tolerance": 3,
-        "edge_min_length": 3,
-    },
-    # 2. Líneas normales — tablas con bordes parciales
-    {
-        "vertical_strategy":   "lines",
-        "horizontal_strategy": "lines",
-        "snap_tolerance": 5,
-        "join_tolerance": 4,
-    },
-    # 3. Texto — tablas separadas por espacios (facturas, listados, etc.)
-    {
-        "vertical_strategy":   "text",
-        "horizontal_strategy": "text",
-        "snap_tolerance": 3,
-        "min_words_vertical": 2,
-        "min_words_horizontal": 1,
-    },
+# Configuraciones de extracción en orden de preferencia
+_TABLE_SETTINGS = [
+    # 1. Líneas explícitas estrictas (tablas con bordes bien definidos)
+    {"vertical_strategy": "lines_strict",
+     "horizontal_strategy": "lines_strict",
+     "snap_tolerance": 4, "join_tolerance": 3},
+    # 2. Líneas normales (bordes parciales)
+    {"vertical_strategy": "lines",
+     "horizontal_strategy": "lines",
+     "snap_tolerance": 5, "join_tolerance": 4},
+    # 3. Basado en texto/espacios (facturas, listados sin bordes)
+    {"vertical_strategy": "text",
+     "horizontal_strategy": "text",
+     "snap_tolerance": 3,
+     "min_words_vertical": 2,
+     "min_words_horizontal": 1},
 ]
 
 
-def extract_with_pdfplumber(file_bytes):
+def _clean_table(table):
+    """Limpia None, normaliza strings, elimina filas vacías."""
+    cleaned = []
+    for row in table:
+        clean_row = [str(c).strip() if c is not None else "" for c in row]
+        if any(c for c in clean_row):
+            cleaned.append(clean_row)
+    return cleaned
+
+
+def _text_to_rows(lines):
+    """Intenta estructurar líneas de texto en columnas por espacios múltiples."""
+    import re
+    has_multi = any(re.search(r"  +", l) for l in lines[:15])
+    if has_multi:
+        rows = [re.split(r"  +", l) for l in lines]
+        rows = [[c.strip() for c in r if c.strip()] for r in rows]
+        rows = [r for r in rows if r]
+        if rows:
+            max_c = max(len(r) for r in rows)
+            rows  = [r + [""] * (max_c - len(r)) for r in rows]
+            return rows
+    return [[l] for l in lines if l.strip()]
+
+
+def extract_all_tables(file_bytes):
     """
-    Extrae tablas con 2 pasadas:
-    - Pasada 1: configuración estricta (líneas)
-    - Pasada 2: si no hay tablas en la página, prueba modo texto
-    Devuelve lista de (sheet_name, [[row_data]])
+    Extrae todas las tablas del PDF.
+    Devuelve lista de (page_num, table_idx, [[row_data]]).
     """
-    results   = []
-    used_names = set()
+    results = []
 
     with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
         for page_num, page in enumerate(pdf.pages, 1):
             page_tables = []
 
-            # Prueba cada configuración
-            for settings in TABLE_SETTINGS:
-                tables = page.extract_tables(settings)
-                if tables:
-                    # Filtrar tablas vacías
-                    valid = [
-                        t for t in tables
-                        if any(any(c for c in row if c) for row in t)
-                    ]
+            # Intentar cada configuración hasta encontrar tablas
+            for settings in _TABLE_SETTINGS:
+                try:
+                    tables = page.extract_tables(settings) or []
+                    valid  = [_clean_table(t) for t in tables if t]
+                    valid  = [t for t in valid if len(t) >= 1]
                     if valid:
                         page_tables = valid
                         break
+                except Exception:
+                    continue
 
             if page_tables:
-                for t_idx, table in enumerate(page_tables):
-                    # Limpiar None y normalizar
-                    data = [
-                        [str(c).strip() if c is not None else "" for c in row]
-                        for row in table
-                        if any(c for c in row if c)
-                    ]
-                    if not data:
-                        continue
-
-                    suffix = f"_T{t_idx+1}" if len(page_tables) > 1 else ""
-                    name = _safe_name(f"Pag{page_num}{suffix}", used_names)
-                    results.append((name, data))
+                for t_idx, table in enumerate(page_tables, 1):
+                    results.append((page_num, t_idx, table))
             else:
-                # Sin tablas: extraer texto como columna única
-                text = page.extract_text() or ""
-                lines = [l.strip() for l in text.split("\n") if l.strip()]
-                if lines:
-                    # Intentar detectar si el texto parece una tabla (columnas por espacios)
-                    data = _text_to_rows(lines)
-                    name = _safe_name(f"Pag{page_num}_texto", used_names)
-                    results.append((name, data))
+                # Sin tablas detectadas: intentar texto estructurado
+                try:
+                    text  = page.extract_text() or ""
+                    lines = [l.strip() for l in text.split("\n") if l.strip()]
+                    if lines:
+                        rows = _text_to_rows(lines)
+                        if rows:
+                            results.append((page_num, 1, rows))
+                except Exception:
+                    pass
 
     return results
 
 
-def _text_to_rows(lines):
-    """
-    Intenta estructurar líneas de texto en filas/columnas.
-    Si las líneas tienen múltiples palabras separadas por ≥3 espacios,
-    las divide en columnas. Si no, las deja como una sola columna.
-    """
-    import re
-    # Detectar si hay separadores de columna (≥2 espacios consecutivos)
-    has_multi_col = any(re.search(r'  +', line) for line in lines[:10])
-
-    if has_multi_col:
-        rows = []
-        for line in lines:
-            cols = re.split(r'  +', line)
-            rows.append([c.strip() for c in cols if c.strip()])
-        # Normalizar número de columnas
-        max_c = max(len(r) for r in rows) if rows else 1
-        rows = [r + [""] * (max_c - len(r)) for r in rows]
-        return rows
-    else:
-        return [[line] for line in lines]
-
-
-def extract_fallback_pdfminer(file_bytes):
-    """Fallback de texto puro con pdfminer."""
-    text = pm_extract_text(io.BytesIO(file_bytes)) or ""
+def extract_fallback_text(file_bytes):
+    """Fallback pdfminer: texto plano en una sola columna."""
+    text  = pm_extract_text(io.BytesIO(file_bytes)) or ""
     lines = [l.strip() for l in text.split("\n") if l.strip()]
     if not lines:
         return []
-    return [("Texto", [[l] for l in lines])]
+    return [(1, 1, [[l] for l in lines])]
 
 
-# ── Conversión principal ──────────────────────────────────────────────────────
+# ── Construcción del XLSX ─────────────────────────────────────────────────────
+
+
+
 
 def pdf_to_xlsx(file_bytes):
     if not OPENPYXL_OK:
         raise RuntimeError("openpyxl no está instalado")
 
     if PDFPLUMBER_OK:
-        sheets = extract_with_pdfplumber(file_bytes)
+        tables = extract_all_tables(file_bytes)
     elif PDFMINER_OK:
-        sheets = extract_fallback_pdfminer(file_bytes)
+        tables = extract_fallback_text(file_bytes)
     else:
-        raise RuntimeError(
-            "Instala pdfplumber: pip install pdfplumber openpyxl"
-        )
+        raise RuntimeError("Instala pdfplumber: pip install pdfplumber openpyxl")
 
     wb = openpyxl.Workbook()
-    wb.remove(wb.active)
+    ws = wb.active
+    ws.title = "Datos"
 
-    if not sheets:
-        ws = wb.create_sheet("Sin_tablas")
+    if not tables:
         ws["A1"] = "No se encontraron tablas en este PDF."
         ws["A1"].font = Font(italic=True, color="888888", name="Calibri")
         ws.column_dimensions["A"].width = 45
-    else:
-        for sheet_name, data in sheets:
-            ws = wb.create_sheet(title=sheet_name)
-            _style_ws(ws, data)
+        buf = io.BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
+
+    # ── Concatenar todas las tablas en una sola tabla continua ───────────
+    # Lógica:
+    #   - La cabecera de la primera tabla → fila 1 con estilo azul
+    #   - Si la siguiente tabla tiene la MISMA cabecera que la primera
+    #     → se omite (es la misma tabla partida entre páginas)
+    #   - Si la cabecera es distinta → se incluye como nueva cabecera
+    #     con estilo azul (caso de tablas distintas en el mismo PDF)
+    #   - Todas las filas de datos van seguidas sin huecos
+
+    n_cols      = max(len(row) for _, _, tbl in tables for row in tbl)
+    current_row = 1
+    first_header = None   # cabecera de la primera tabla
+    data_row_idx = 0      # contador global para filas alternas
+
+    for entry_idx, (page_num, t_idx, table) in enumerate(tables):
+        if not table:
+            continue
+        tbl_cols = max(len(row) for row in table)
+        if tbl_cols == 0:
+            continue
+
+        for r_idx, row in enumerate(table):
+            # Rellenar hasta n_cols para mantener alineación
+            padded = row + [""] * (n_cols - len(row))
+
+            is_header_row = r_idx == 0
+
+            if is_header_row:
+                if first_header is None:
+                    # Primera cabecera → escribir siempre
+                    first_header = padded
+                elif padded == first_header:
+                    # Cabecera repetida (misma tabla, siguiente página) → omitir
+                    continue
+                # Cabecera distinta → escribir como nueva cabecera
+                for c_idx, val in enumerate(padded, 1):
+                    ws.cell(row=current_row, column=c_idx, value=val)
+                _style_header_row(ws, current_row, n_cols)
+                current_row += 1
+            else:
+                # Fila de datos
+                for c_idx, val in enumerate(padded, 1):
+                    ws.cell(row=current_row, column=c_idx, value=val)
+                _style_body_row(ws, current_row, n_cols, alt=(data_row_idx % 2 == 0))
+                data_row_idx += 1
+                current_row  += 1
+
+    # ── Post-proceso ──────────────────────────────────────────────────────
+    _auto_width(ws)
+    ws.freeze_panes = "A2"
+
+    # Filtro automático sobre toda la tabla
+    end_col = get_column_letter(n_cols)
+    end_row = current_row - 1
+    ws.auto_filter.ref = f"A1:{end_col}{end_row}"
 
     buf = io.BytesIO()
     wb.save(buf)
