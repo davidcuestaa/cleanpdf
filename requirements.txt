@@ -10,14 +10,15 @@ reportlab==4.2.5
 # PDF → Word (reconstruye layout, tablas, imágenes)
 pdf2docx==0.5.8
 
-# PDF → Excel  (extracción de tablas)
+# PDF → Excel + PDF → PPT fallback (extracción de tablas y texto)
 pdfplumber==0.11.4
-
-# PDF → PPT  (extracción con coordenadas)
-# pdfplumber ya instalado arriba
 
 # Fallback texto para todos los convertidores
 pdfminer.six==20231228
 
-# Imágenes (requerido por pdf2docx internamente)
+# PDF → PPT imagen (RECOMENDADO — renderiza páginas con fidelidad 100%)
+# wheel pura Python, funciona en Vercel sin instalar nada del sistema
+pymupdf==1.24.10
+
+# Imágenes (requerido por pdf2docx y pymupdf internamente)
 Pillow==10.4.0
